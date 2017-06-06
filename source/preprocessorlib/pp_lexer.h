@@ -66,9 +66,9 @@ typedef struct TEXTPOS {
 ******************************************************************************/
 typedef struct pp_token {
 	PP_TOKEN_TYPE theType;
-	char theSource[MAX_TOKEN_LENGTH + 1];
+	CHAR theSource[MAX_TOKEN_LENGTH + 1];
 	TEXTPOS theTextPosition;
-	u32 charOffset;
+	ULONG charOffset;
 } pp_token;
 
 //Enumerate the comment types for use in CLexer
@@ -84,27 +84,27 @@ typedef enum COMMENT_TYPE {
 *  parser.
 ******************************************************************************/
 typedef struct pp_lexer {
-	const char* ptheSource;
+	LPCSTR ptheSource;
 	TEXTPOS theTextPosition;
-	u32 offset;
-	u32 tokOffset;
-	char *pcurChar;
+	ULONG offset;
+	ULONG tokOffset;
+	CHAR *pcurChar;
 	//Character buffer for the tokens
-	char theTokenSource[MAX_TOKEN_LENGTH];
+	CHAR theTokenSource[MAX_TOKEN_LENGTH];
 	TEXTPOS theTokenPosition;
 } pp_lexer;
 
 
 //Constructor
-void pp_token_Init(pp_token * ptoken, PP_TOKEN_TYPE theType, const char* theSource, TEXTPOS theTextPosition,
-		   u32 charOffset);
-void pp_lexer_Init(pp_lexer * plexer, const char* theSource, TEXTPOS theStartingPosition);
+void pp_token_Init(pp_token * ptoken, PP_TOKEN_TYPE theType, LPCSTR theSource, TEXTPOS theTextPosition,
+		   ULONG charOffset);
+void pp_lexer_Init(pp_lexer * plexer, LPCSTR theSource, TEXTPOS theStartingPosition);
 void pp_lexer_Clear(pp_lexer * plexer);
-s32 pp_lexer_GetNextToken(pp_lexer * plexer, pp_token * theNextToken);
-s32 pp_lexer_GetTokenIdentifier(pp_lexer * plexer, pp_token * theNextToken);
-s32 pp_lexer_GetTokenNumber(pp_lexer * plexer, pp_token * theNextToken);
-s32 pp_lexer_GetTokenStringLiteral(pp_lexer * plexer, pp_token * theNextToken);
-s32 pp_lexer_GetTokenSymbol(pp_lexer * plexer, pp_token * theNextToken);
-s32 pp_lexer_SkipComment(pp_lexer * lexer, COMMENT_TYPE theType);
+HRESULT pp_lexer_GetNextToken(pp_lexer * plexer, pp_token * theNextToken);
+HRESULT pp_lexer_GetTokenIdentifier(pp_lexer * plexer, pp_token * theNextToken);
+HRESULT pp_lexer_GetTokenNumber(pp_lexer * plexer, pp_token * theNextToken);
+HRESULT pp_lexer_GetTokenStringLiteral(pp_lexer * plexer, pp_token * theNextToken);
+HRESULT pp_lexer_GetTokenSymbol(pp_lexer * plexer, pp_token * theNextToken);
+HRESULT pp_lexer_SkipComment(pp_lexer * lexer, COMMENT_TYPE theType);
 
 #endif

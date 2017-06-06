@@ -51,7 +51,7 @@ static gifheaderstruct gif_header;
 
 
 
-#if PSP || PS2 || DC
+#if PSP || PS2 || DC || AMIGA
 #define sizeof_gifheaderstruct 13
 #define sizeof_iblock 9
 #endif
@@ -330,7 +330,7 @@ int anigif_open(char *filename, char *packfilename, unsigned char *pal) {
 		return 0;
 #endif
 
-#if PSP || PS2 || DC
+#if PSP || PS2 || DC || AMIGA
 	if(readpackfile(handle, &gif_header, sizeof_gifheaderstruct) != sizeof_gifheaderstruct) {
 #else
 	if(readpackfile(handle, &gif_header, sizeof(gifheaderstruct)) != sizeof(gifheaderstruct)) {
@@ -411,7 +411,7 @@ int anigif_decode(s_screen * screen, int *delay, int x, int y) {
 	switch (c) {
 		case ',':
 			// An image block
-#if PSP || PS2 || DC
+#if PSP || PS2 || DC || AMIGA
 			if(readpackfile(handle, &iblock, sizeof_iblock) != sizeof_iblock) {
 #else
 			if(readpackfile(handle, &iblock, sizeof(iblock)) != sizeof(iblock)) {

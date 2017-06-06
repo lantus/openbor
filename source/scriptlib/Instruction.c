@@ -21,13 +21,13 @@ void Instruction_InitViaToken(Instruction * pins, OpCode code, Token * pToken) {
 		pins->theToken->theType = END_OF_TOKENS;
 }
 
-void Instruction_InitViaLabel(Instruction * pins, OpCode code, const char* label) {
+void Instruction_InitViaLabel(Instruction * pins, OpCode code, LPCSTR label) {
 	memset(pins, 0, sizeof(Instruction));
 	pins->OpCode = code;
 	pins->theToken = malloc(sizeof(Token));
 	memset(pins->theToken, 0, sizeof(Token));
 	pins->theToken->theType = END_OF_TOKENS;
-	pins->Label = malloc(sizeof(char) * (MAX_STR_LEN + 1));
+	pins->Label = malloc(sizeof(CHAR) * (MAX_STR_LEN + 1));
 	strcpy(pins->Label, label);
 }
 
@@ -114,23 +114,23 @@ void Instruction_ConvertConstant(Instruction * pins) {
 		ScriptVariant_Init(pvar);
 		ScriptVariant_ChangeType(pvar, VT_DECIMAL);
 		if(pins->theToken->theType != END_OF_TOKENS)
-			pvar->dblVal = (double) atof(pins->theToken->theSource);
+			pvar->dblVal = (DOUBLE) atof(pins->theToken->theSource);
 		else
-			pvar->dblVal = (double) atof(pins->Label);
+			pvar->dblVal = (DOUBLE) atof(pins->Label);
 	} else if(pins->OpCode == CONSTINT || pins->OpCode == CHECKARG) {
 		pvar = (ScriptVariant *) malloc(sizeof(ScriptVariant));
 		ScriptVariant_Init(pvar);
 		ScriptVariant_ChangeType(pvar, VT_INTEGER);
 		if(pins->theToken->theType != END_OF_TOKENS) {
 			if(pins->theToken->theType == TOKEN_HEXCONSTANT)
-				pvar->lVal = (s32) htoi(pins->theToken->theSource);
+				pvar->lVal = (LONG) htoi(pins->theToken->theSource);
 			else
-				pvar->lVal = (s32) atoi(pins->theToken->theSource);
+				pvar->lVal = (LONG) atoi(pins->theToken->theSource);
 		} else {
 			if(pins->Label[1] == 'x' || pins->Label[1] == 'X')
-				pvar->lVal = (s32) htoi(pins->Label);
+				pvar->lVal = (LONG) htoi(pins->Label);
 			else
-				pvar->lVal = (s32) atoi(pins->Label);
+				pvar->lVal = (LONG) atoi(pins->Label);
 		}
 	} else if(pins->OpCode == CONSTSTR) {
 		pvar = (ScriptVariant *) malloc(sizeof(ScriptVariant));
@@ -143,7 +143,7 @@ void Instruction_ConvertConstant(Instruction * pins) {
 }
 
 
-void Instruction_ToString(Instruction * pins, char* strRep) {
+void Instruction_ToString(Instruction * pins, LPSTR strRep) {
 	strRep[0] = 0;
 
 	switch (pins->OpCode) {

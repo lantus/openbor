@@ -25,18 +25,48 @@
 #include <sys/stat.h>
 
 #ifdef SDL
-#  include <unistd.h>
-#  include "sdlport.h"
+#include <unistd.h>
+#include "sdlport.h"
 #endif
 
 #define MKDIR(x) mkdir(x, 0777)
 
+#ifdef XBOX
+#define CHECK_LOGFILE(type)  type ? fileExists("d:\\Logs\\OpenBorLog.txt") : fileExists("d:\\Logs\\ScriptLog.txt")
+#define OPEN_LOGFILE(type)   type ? fopen("d:\\Logs\\OpenBorLog.txt", "wt") : fopen("d:\\Logs\\ScriptLog.txt", "wt")
+#define APPEND_LOGFILE(type) type ? fopen("d:\\Logs\\OpenBorLog.txt", "at") : fopen("d:\\Logs\\ScriptLog.txt", "at")
+#define READ_LOGFILE(type)   type ? fopen("d:\\Logs\\OpenBorLog.txt", "rt") : fopen("d:\\Logs\\ScriptLog.txt", "rt")
+#define COPY_ROOT_PATH(buf, name) strncpy(buf, "d:\\", 3); strncat(buf, name, strlen(name)); strncat(buf, "\\", 1)
+#define COPY_PAKS_PATH(buf, name) strncpy(buf, "d:\\Paks\\", 8); strncat(buf, name, strlen(name))
+#elif WII && !SDL
+#define CHECK_LOGFILE(type)  type ? fileExists(getFullPath("Logs/OpenBorLog.txt")) : fileExists(getFullPath("Logs/ScriptLog.txt"))
+#define OPEN_LOGFILE(type)   type ? fopen(getFullPath("Logs/OpenBorLog.txt"), "wt") : fopen(getFullPath("Logs/ScriptLog.txt"), "wt")
+#define APPEND_LOGFILE(type) type ? fopen(getFullPath("Logs/OpenBorLog.txt"), "at") : fopen(getFullPath("Logs/ScriptLog.txt"), "at")
+#define READ_LOGFILE(type)   type ? fopen(getFullPath("Logs/OpenBorLog.txt"), "rt") : fopen(getFullPath("Logs/ScriptLog.txt"), "rt")
+#define COPY_ROOT_PATH(buf, name) strcpy(buf, rootDir); strncat(buf, name, strlen(name)); strncat(buf, "/", 1);
+#define COPY_PAKS_PATH(buf, name) strncpy(buf, paksDir, strlen(paksDir)); strncat(buf, "/", 1); strncat(buf, name, strlen(name));
+#elif WII && SDL
+#define CHECK_LOGFILE(type)  type ? fileExists("sd:/apps/OpenBOR/Logs/OpenBorLog.txt") : fileExists("sd:/apps/OpenBOR/Logs/ScriptLog.txt")
+#define OPEN_LOGFILE(type)   type ? fopen("sd:/apps/OpenBOR/Logs/OpenBorLog.txt", "wt") : fopen("sd:/apps/OpenBOR/Logs/ScriptLog.txt", "wt")
+#define APPEND_LOGFILE(type) type ? fopen("sd:/apps/OpenBOR/Logs/OpenBorLog.txt", "at") : fopen("sd:/apps/OpenBOR/Logs/ScriptLog.txt", "at")
+#define READ_LOGFILE(type)   type ? fopen("sd:/apps/OpenBOR/Logs/OpenBorLog.txt", "rt") : fopen("sd:/apps/OpenBOR/Logs/ScriptLog.txt", "rt")
+#define COPY_ROOT_PATH(buf, name) strncpy(buf, "sd:/apps/OpenBOR/", 17); strncat(buf, name, strlen(name)); strncat(buf, "/", 1);
+#define COPY_PAKS_PATH(buf, name) strncpy(buf, "sd:/apps/OpenBOR/Paks/", 22); strncat(buf, name, strlen(name));
+#elif AMIGA
+#define CHECK_LOGFILE(type)  type ? fileExists("Logs/OpenBorLog.txt") : fileExists("Logs/ScriptLog.txt")
+#define OPEN_LOGFILE(type)   type ? fopen("Logs/OpenBorLog.txt", "wt") : fopen("Logs/ScriptLog.txt", "wt")
+#define APPEND_LOGFILE(type) type ? fopen("Logs/OpenBorLog.txt", "at") : fopen("Logs/ScriptLog.txt", "at")
+#define READ_LOGFILE(type)   type ? fopen("Logs/OpenBorLog.txt", "rt") : fopen("Logs/ScriptLog.txt", "rt")
+#define COPY_ROOT_PATH(buf, name) strncpy(buf, "", 2); strncat(buf, name, strlen(name)); strncat(buf, "/", 1);
+#define COPY_PAKS_PATH(buf, name) strncpy(buf, "Paks/", 7); strncat(buf, name, strlen(name));
+#else
 #define CHECK_LOGFILE(type)  type ? fileExists("./Logs/OpenBorLog.txt") : fileExists("./Logs/ScriptLog.txt")
 #define OPEN_LOGFILE(type)   type ? fopen("./Logs/OpenBorLog.txt", "wt") : fopen("./Logs/ScriptLog.txt", "wt")
 #define APPEND_LOGFILE(type) type ? fopen("./Logs/OpenBorLog.txt", "at") : fopen("./Logs/ScriptLog.txt", "at")
 #define READ_LOGFILE(type)   type ? fopen("./Logs/OpenBorLog.txt", "rt") : fopen("./Logs/ScriptLog.txt", "rt")
-#define COPY_ROOT_PATH(buf, name) strcpy(buf, "./"); strcat(buf, name); strcat(buf, "/");
-#define COPY_PAKS_PATH(buf, name) strcpy(buf, "./Paks/"); strcat(buf, name);
+#define COPY_ROOT_PATH(buf, name) strncpy(buf, "./", 2); strncat(buf, name, strlen(name)); strncat(buf, "/", 1);
+#define COPY_PAKS_PATH(buf, name) strncpy(buf, "./Paks/", 7); strncat(buf, name, strlen(name));
+#endif
 
 void debugBuf(unsigned char *buf, size_t size, int columns) {
 	size_t pos = 0;
@@ -94,14 +124,25 @@ void getBasePath(char *newName, char *name, int type) {
 		snprintf(buf, sizeof(buf) - 1, "%s/%s", paksDir, name);
 	else 
 		snprintf(buf, sizeof(buf) - 1, "%s/", name);
-	
+
+#ifndef AMIGA        	
+ 
 	if(is_dir(buf)) 
 		strcat(buf, "/");
+#endif		
+
 	strncpy(newName, buf, sizeof(buf));
 }
 
+
+
+#ifndef DC
 int dirExists(char *dname, int create) {
 	char realName[128] = { "" };
+#ifdef XBOX
+	getBasePath(realName, dname, 0);
+	return CreateDirectory(realName, NULL);
+#else
 	DIR *fd1 = NULL;
 	int fd2 = -1;
 	strncpy(realName, dname, 128);
@@ -114,8 +155,12 @@ int dirExists(char *dname, int create) {
 		fd2 = MKDIR(realName);
 		if(fd2 < 0)
 			return 0;
+#ifdef DARWIN
+		chmod(realName, 0777);
+#endif
 		return 1;
 	}
+#endif
 	return 0;
 }
 
@@ -125,6 +170,67 @@ int fileExists(char *fnam) {
 		return 0;
 	fclose(handle);
 	return 1;
+}
+
+stringptr *readFromLogFile(int which) {
+	long size;
+	int disCcWarns;
+	FILE *handle = NULL;
+	stringptr *buffer = NULL;
+	handle = READ_LOGFILE((which ? OPENBOR_LOG : SCRIPT_LOG));
+	if(handle == NULL)
+		return NULL;
+	fseek(handle, 0, SEEK_END);
+	size = ftell(handle);
+	rewind(handle);
+	if(size == 0)
+		goto CLOSE_AND_QUIT;
+	// allocate memory to contain the whole file:
+	//buffer = (char*)malloc(sizeof(char)*(size+1)); // alloc one additional byte for the
+	buffer = new_string(size);
+	if(buffer == NULL)
+		goto CLOSE_AND_QUIT;
+	disCcWarns = fread(buffer->ptr, 1, size, handle);
+	CLOSE_AND_QUIT:
+	fclose(handle);
+	return buffer;
+}
+#endif
+
+void writeToLogFile(const char *msg, ...) {
+	va_list arglist;
+
+#ifdef DC
+	va_start(arglist, msg);
+	vfprintf(stdout, msg, arglist);
+	va_end(arglist);
+	fflush(stdout);
+#else
+	if(openborLog == NULL) {
+		openborLog = OPEN_LOGFILE(OPENBOR_LOG);
+		if(openborLog == NULL)
+			return;
+	}
+	va_start(arglist, msg);
+	vfprintf(openborLog, msg, arglist);
+	va_end(arglist);
+	fflush(openborLog);
+#endif
+}
+
+void writeToScriptLog(const char *msg) {
+#ifndef DC
+	int disCcWarns;
+
+	if(scriptLog == NULL) {
+		scriptLog = OPEN_LOGFILE(SCRIPT_LOG);
+		if(scriptLog == NULL)
+			return;
+	}
+
+	disCcWarns = fwrite(msg, 1, strlen(msg), scriptLog);
+	fflush(scriptLog);
+#endif
 }
 
 void debug_printf(char *format, ...) {
@@ -306,6 +412,66 @@ char *commaprint(u64 n) {
 	} while(n != 0);
 
 	return p;
+}
+
+//! Increase or Decrease an array à la \e vector
+/**
+	\param f_caller : name of the calling function for logging purpose
+	\param array : the array to consider
+	\param new_size : new size needed for the array (in BYTE) :
+		-# if new_size <= 0 : Deallocation of the array
+		-# new_size < \a curr_size_allocated - \a grow_step => Decrease of the array
+		-# new_size >= \a curr_size_allocated => Increase of the array
+	\param curr_size_allocated : current allocated size to the array (in BYTE)
+	\param grow_step : bloc size of expansion of the array (in BYTE)
+*/
+void Array_Check_Size(const char *f_caller, char **array, int new_size, int *curr_size_allocated, int grow_step) {
+	// Deallocation
+	if(new_size <= 0) {
+		if(*array != NULL) {
+			free(*array);
+			*array = NULL;
+		}
+		*curr_size_allocated = 0;
+	}
+	// First allocation
+	else if(*array == NULL) {
+		*curr_size_allocated = grow_step;
+		*array = malloc(*curr_size_allocated);
+		if(*array == NULL)
+			shutdown(1, "Out Of Memory!  Failed in %s\n", f_caller);
+		memset(*array, 0, *curr_size_allocated);
+		return;
+	}
+	// No need to decrease or increase the array
+	else if(new_size > (*curr_size_allocated - grow_step) && new_size <= *curr_size_allocated)
+		return;
+
+	//-------------------------------------------
+	// Must increase or decrease the array size
+
+	int old_size = *curr_size_allocated;
+
+	// Recompute needed size
+	*curr_size_allocated = ((int) ceil((float) new_size / (float) grow_step)) * grow_step;
+
+	// Alloc a new array
+	void *copy = malloc(*curr_size_allocated);
+	if(copy == NULL)
+		shutdown(1, "Out Of Memory!  Failed in %s\n", f_caller);
+
+	// Copy the previous content of the array
+	memcpy(copy, *array, ((old_size < new_size) ? old_size : new_size));
+
+	// Init the new allocations
+	if(old_size < *curr_size_allocated)
+		memset(copy + old_size, 0, *curr_size_allocated - old_size);
+
+	// Free previous array memory
+	free(*array);
+
+	// ReAssign the new allocated array
+	*array = copy;
 }
 
 void char_to_lower(char *dst, char *src, size_t maxlen) {

@@ -31,8 +31,8 @@ static int filecache_blocks;
 static int max_vfds;
 
 //static int default_minimum_run_bytes = 98304;
-static int default_minimum_run_bytes = 131072;
-//static int default_minimum_run_bytes = 262144;
+//static int default_minimum_run_bytes = 131072;
+static int default_minimum_run_bytes = 262144;
 
 /////////////////////////////////////////////////////////////////////////////
 

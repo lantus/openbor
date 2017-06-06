@@ -262,39 +262,26 @@ typedef enum {
 	ANI_WALK,
 	ANI_JUMP,
 	ANI_LAND,
-	ANI_ATTACK,
-	ANI_ATTACK1 = ANI_ATTACK,
+	ANI_ATTACK1,
 	ANI_ATTACK2,
 	ANI_ATTACK3,
 	ANI_ATTACK4, // Very important
 	ANI_UPPER,
 	ANI_BLOCK, // New block animation
 	ANI_JUMPATTACK,
-	ANI_JUMPATTACK1 = ANI_JUMPATTACK,
 	ANI_JUMPATTACK2,
-	ANI_JUMPATTACK3,
 	ANI_GET,
 	ANI_GRAB,
 	ANI_GRABATTACK,
-	ANI_GRABATTACK1 = ANI_GRABATTACK,
 	ANI_GRABATTACK2,
 	ANI_THROW,
 	ANI_SPECIAL,
-	ANI_SPECIAL1 = ANI_SPECIAL,
-	ANI_SPECIAL2,	// Animation played for when pressing forward special
-	ANI_SPECIAL3,	// special3 is an alias for jumpspecial
-	ANI_JUMPSPECIAL = ANI_SPECIAL3,
 	ANI_FREESPECIAL,
-	ANI_FREESPECIAL1 = ANI_FREESPECIAL,
-	ANI_FREESPECIAL2,
-	ANI_FREESPECIAL3,
-	ANI_FREESPECIAL4,	// More freespecials added
-	ANI_FREESPECIAL5,	// More freespecials added
-	ANI_FREESPECIAL6,	// More freespecials added
-	ANI_FREESPECIAL7,	// More freespecials added
-	ANI_FREESPECIAL8,	// More freespecials added
 	ANI_SPAWN,	// 26-12-2004 new animation added here ani_spawn
 	ANI_PICK,	// 7-1-2005 used when players select their character at the select screen
+	ANI_FREESPECIAL2,
+	ANI_JUMPATTACK3,
+	ANI_FREESPECIAL3,
 	ANI_UP,	// Mar 2, 2005 - Animation for when going up
 	ANI_DOWN,	// Mar 2, 2005 - Animation for when going down
 	ANI_SHOCK,	// Animation played when knocked down by shock attack
@@ -302,6 +289,7 @@ typedef enum {
 	ANI_SHOCKPAIN,	// Animation played when not knocked down by shock attack
 	ANI_BURNPAIN,	// Animation played when not knocked down by shock attack
 	ANI_GRABBED,	// Animation played when grabbed
+	ANI_SPECIAL2,	// Animation played for when pressing forward special
 	ANI_RUN,	// Animation played when a player is running
 	ANI_RUNATTACK,	// Animation played when a player is running and presses attack
 	ANI_RUNJUMPATTACK,	// Animation played when a player is running and jumps and presses attack
@@ -309,6 +297,11 @@ typedef enum {
 	ANI_ATTACKDOWN,	// d d animation
 	ANI_ATTACKFORWARD,	// f f animation
 	ANI_ATTACKBACKWARD,	// Used for attacking backwards
+	ANI_FREESPECIAL4,	// More freespecials added
+	ANI_FREESPECIAL5,	// More freespecials added
+	ANI_FREESPECIAL6,	// More freespecials added
+	ANI_FREESPECIAL7,	// More freespecials added
+	ANI_FREESPECIAL8,	// More freespecials added
 	ANI_DODGE,	// Used for up up / down down SOR3 dodge moves for players
 	ANI_ATTACKBOTH,	// Used for when a player holds down attack and presses jump
 	ANI_GRABFORWARD,	// New grab attack for when a player holds down forward/attack
@@ -326,10 +319,10 @@ typedef enum {
 	ANI_CHARGEATTACK,	// Plays when player releases attack1 after holding >= chargetime.
 	ANI_VAULT,	// Now you can flip over people like in SOR.
 	ANI_JUMPCANT,
+	ANI_JUMPSPECIAL,
 	ANI_BURNDIE,
 	ANI_SHOCKDIE,
 	ANI_PAIN, //the pain anims must be in a sequence as they're used to calculate offsets in lcmHandleCommandAnim()
-	ANI_PAIN1 = ANI_PAIN,
 	ANI_PAIN2,
 	ANI_PAIN3,
 	ANI_PAIN4,
@@ -340,7 +333,6 @@ typedef enum {
 	ANI_PAIN9,
 	ANI_PAIN10,
 	ANI_FALL,
-	ANI_FALL1 = ANI_FALL,
 	ANI_FALL2,
 	ANI_FALL3,
 	ANI_FALL4,
@@ -351,7 +343,6 @@ typedef enum {
 	ANI_FALL9,
 	ANI_FALL10,
 	ANI_DIE,	// 29-12-2004 new animation added here ani_die
-	ANI_DIE1 = ANI_DIE,
 	ANI_DIE2,
 	ANI_DIE3,
 	ANI_DIE4,
@@ -364,8 +355,7 @@ typedef enum {
 	ANI_CHARGE,
 	ANI_BACKWALK,
 	ANI_SLEEP,
-	ANI_FOLLOW,
-	ANI_FOLLOW1 = ANI_FOLLOW,
+	ANI_FOLLOW1,
 	ANI_FOLLOW2,
 	ANI_FOLLOW3,
 	ANI_FOLLOW4,
@@ -377,7 +367,6 @@ typedef enum {
 	ANI_JUMPDELAY,
 	ANI_HITWALL,
 	ANI_GRABBACKWARD,
-	ANI_GRABBACKWARD1 = ANI_GRABBACKWARD,
 	ANI_GRABBACKWARD2,
 	ANI_GRABWALK,
 	ANI_GRABBEDWALK,
@@ -393,7 +382,6 @@ typedef enum {
 	ANI_RUNSLIDE,	//Down + Jump while running.
 	ANI_DUCKATTACK,
 	ANI_RISE,
-	ANI_RISE1 = ANI_RISE,
 	ANI_RISE2,
 	ANI_RISE3,
 	ANI_RISE4,
@@ -406,7 +394,6 @@ typedef enum {
 	ANI_RISEB,
 	ANI_RISES,
 	ANI_BLOCKPAIN,	//If entity has this, it will play in place of "pain" when its blockpain is 1 and incoming attack is blocked.
-	ANI_BLOCKPAIN1 = ANI_BLOCKPAIN,
 	ANI_BLOCKPAIN2,
 	ANI_BLOCKPAIN3,
 	ANI_BLOCKPAIN4,
@@ -421,7 +408,6 @@ typedef enum {
 	ANI_CHIPDEATH,
 	ANI_GUARDBREAK,
 	ANI_RISEATTACK,	// Attack used for enemies when players are crowding around after knocking them down
-	ANI_RISEATTACK1 = ANI_RISEATTACK,
 	ANI_RISEATTACK2,
 	ANI_RISEATTACK3,
 	ANI_RISEATTACK4,
@@ -1455,19 +1441,7 @@ typedef struct {
 	float upperright;
 	float lowerright;
 	float depth;
-} s_hole;
-
-// attention, s_wall must have all the members of s_hole in the same order
-// as it is used in checkwall_or_hole()
-typedef struct {
-	float x;
-	float z;
-	float upperleft;
-	float lowerleft;
-	float upperright;
-	float lowerright;
-	float depth;
-	float alt;
+	float alt;	
 } s_wall;
 
 typedef struct {
@@ -1487,7 +1461,7 @@ typedef struct {
 	int camerazoffset;
 	int numholes;
 	int numwalls;		// Stores number of walls loaded
-	s_hole holes[LEVEL_MAX_HOLES];
+	float holes[LEVEL_MAX_HOLES][7];
 	int holesfound[LEVEL_MAX_HOLES];
 	s_wall walls[LEVEL_MAX_WALLS];	// Now you can have walls for different walkable areas
 	int wallsfound[LEVEL_MAX_WALLS];

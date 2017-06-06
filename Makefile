@@ -17,11 +17,8 @@ BUILD_SDL       = 1
 BUILD_GFX       = 1
 BUILD_PTHREAD   = 1
 BUILD_SDL_IO    = 1
-ifndef NO_GL
 BUILD_OPENGL    = 1
 BUILD_LOADGL    = 1
-CFLAGS += -DOPENGL
-endif
 BUILD_VORBIS    = 1
 BUILDING        = 1
 CC              ?= gcc
@@ -152,7 +149,7 @@ OBJS = $(MAIN) $(GAME_CONSOLE) $(ADPCM) $(GFX) $(GAME) $(SOURCE) $(SCRIPT) $(RAN
 #----------------------------------------------------------------------------------------------------
 
 CFLAGS 	       += $(addprefix -I", $(addsuffix ", $(INCS))) $(ARCHFLAGS)
-CFLAGS 	       += -Wall -fsigned-char
+CFLAGS 	       += -Wall -Werror -fsigned-char
 
 ifndef BUILD_DEBUG
   CFLAGS 	       += -fno-ident -freorder-blocks 

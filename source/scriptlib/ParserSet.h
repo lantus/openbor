@@ -20,7 +20,7 @@ typedef struct ParserSet {
 
 void ParserSet_Buildup(ParserSet * pset);
 void ParserSet_Clear(ParserSet * pset);
-bool ParserSet_First(ParserSet * pset, PRODUCTION theProduction, MY_TOKEN_TYPE theToken);
-bool ParserSet_Follow(ParserSet * pset, PRODUCTION theProduction, MY_TOKEN_TYPE theToken);
-MY_TOKEN_TYPE LookupValue(char * theToken);
+BOOL ParserSet_First(ParserSet * pset, PRODUCTION theProduction, MY_TOKEN_TYPE theToken);
+BOOL ParserSet_Follow(ParserSet * pset, PRODUCTION theProduction, MY_TOKEN_TYPE theToken);
+MY_TOKEN_TYPE LookupValue(CHAR * theToken);
 #endif

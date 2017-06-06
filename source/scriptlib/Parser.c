@@ -37,14 +37,14 @@ void Parser_Clear(Parser * pparser) {
 *  Parameters: pcontext -- Preprocessor context for the script to be parsed.
 *              pIList -- pointer to a TList<CInstruction> which takes the
 *                        stream of CInstructions representing the parsed text
-*              scriptText -- const char* which contains ths script to be parsed.
+*              scriptText -- LPCSTR which contains ths script to be parsed.
 *              startingLineNumber -- Line on which this script starts.  The
 *                        lexer needs this information to maintain accurate
 *                        line counts.
 *  Returns:
 ******************************************************************************/
-void Parser_ParseText(Parser * pparser, pp_context * pcontext, List * pIList, char* scriptText,
-		      u32 startingLineNumber, const char* path) {
+void Parser_ParseText(Parser * pparser, pp_context * pcontext, List * pIList, LPSTR scriptText,
+		      ULONG startingLineNumber, LPCSTR path) {
 	//Create a new CLexer for this script text.
 	TEXTPOS thePosition;
 	thePosition.row = startingLineNumber;
@@ -80,20 +80,20 @@ void Parser_ParseText(Parser * pparser, pp_context * pcontext, List * pIList, ch
 *  global variable and function definition.
 *  Parameters: pIList -- pointer to a TList<CInstruction> which takes the
 *                        stream of CInstructions representing the parsed text
-*              scriptText -- const char* which contains ths script to be parsed.
+*              scriptText -- LPCSTR which contains ths script to be parsed.
 *              startingLineNumber -- Line on which this script starts.  The
 *                        lexer needs this information to maintain accurate
 *                        line counts.
 *  Returns:
 ******************************************************************************/
-void Parser_ParseExpression(Parser * pparser, List * pIList, char* scriptText, u32 startingLineNumber, const char* path) {
+void Parser_ParseExpression(Parser * pparser, List * pIList, LPSTR scriptText, ULONG startingLineNumber, LPCSTR path) {
 	TEXTPOS thePosition;
 
 	//Append a semi-colon to the end of the expression, in order to use the
 	//same grammar as regular script text.
-	char* expressionText = (char *) malloc(sizeof(char) * strlen(scriptText) + 2);
-	strcpy((char *) expressionText, scriptText);
-	strcat((char *) expressionText, ";");
+	LPSTR expressionText = (CHAR *) malloc(sizeof(CHAR) * strlen(scriptText) + 2);
+	strcpy((CHAR *) expressionText, scriptText);
+	strcat((CHAR *) expressionText, ";");
 
 	//Create a new CLexer for this script text.
 	thePosition.row = startingLineNumber;
@@ -159,7 +159,7 @@ void Parser_AddInstructionViaLabel(Parser * pparser, OpCode pCode, Label instrLa
 *  Returns: true if the current token type matches theType
 *           false otherwise.
 ******************************************************************************/
-bool Parser_Check(Parser * pparser, MY_TOKEN_TYPE theType) {
+BOOL Parser_Check(Parser * pparser, MY_TOKEN_TYPE theType) {
 	//compare the token types
 	return (pparser->theNextToken.theType == theType);
 }
@@ -184,13 +184,13 @@ Label Parser_CreateLabel(Parser * pparser) {
 	//Allocate a buffer for the new Label.  A long can take 10 characters at
 	//most, so allocate that plus two extra for the "" and the null
 	//terminator
-	Label theLabel = (char *) malloc(12);
+	Label theLabel = (CHAR *) malloc(12);
 	memset((void *) theLabel, 0, 12);
 
 	//Increment the label count.
 	pparser->LabelCount++;
 
-	sprintf((char *) theLabel, "L%d", pparser->LabelCount);
+	sprintf((CHAR *) theLabel, "L%d", pparser->LabelCount);
 
 	return theLabel;
 }
@@ -226,7 +226,7 @@ void Parser_External_decl(Parser * pparser) {
 // this function is used by Parser_External_decl, because there can be multiple identifiers share only one type token
 // variable only means the function only accept variables, not function declaration, e.g.
 // int a, b=1, c;
-void Parser_External_decl2(Parser * pparser, bool variableonly) {
+void Parser_External_decl2(Parser * pparser, BOOL variableonly) {
 	Token token = pparser->theNextToken;
 	//ignore the type of this declaration
 	if(!Parser_Check(pparser, TOKEN_IDENTIFIER)) {
@@ -430,7 +430,7 @@ void Parser_Param_list(Parser * pparser) {
 
 void Parser_Param_list2(Parser * pparser) {
 	int i;
-	char buf[4];
+	CHAR buf[4];
 	Instruction *pinstruction;
 	if(Parser_Check(pparser, TOKEN_COMMA)) {
 		Parser_Match(pparser);
@@ -538,7 +538,7 @@ void Parser_Comp_stmt_Label(Parser * pparser, Label theLabel) {
 		Parser_Match(pparser);
 		Parser_AddInstructionViaToken(pparser, PUSH, (Token *) NULL, NULL);
 		label = Parser_CreateLabel(pparser);
-		strcpy((char *) theLabel, label);
+		strcpy((CHAR *) theLabel, label);
 		Parser_Comp_stmt2(pparser);
 		Parser_Comp_stmt3(pparser);
 		Parser_AddInstructionViaToken(pparser, NOOP, (Token *) NULL, label);
@@ -1153,7 +1153,7 @@ void Parser_Arg_expr_list2(Parser * pparser, int argCount, int range) {
 	//We push the arguments onto the stack backwards so they come off right,
 	//So back up one instruction before inserting.
 	int argRange, i;
-	char buffer[4];
+	CHAR buffer[4];
 	List_GotoPrevious(pparser->pIList);
 
 	if(Parser_Check(pparser, TOKEN_COMMA)) {

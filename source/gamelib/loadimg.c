@@ -489,19 +489,25 @@ static void passgifblock(int handle) {
 
 static int opengif(char *filename, char *packfilename) {
 
+    PDEBUG(" call opengif() filename = %s, packfilename = %s \n", filename, packfilename);
 	if((handle = openpackfile(filename, packfilename)) == -1)
+	{
+        PDEBUG(" errored on openpackfile() \n");
 		return 0;
+    }
 
-	if(readpackfile(handle, &gif_header, sizeof(gifheaderstruct)) != sizeof(gifheaderstruct)) {
+	if(readpackfile(handle, &gif_header, 13) != 13) {    
+        PDEBUG(" errored on readpackfile() \n");        
 		closepackfile(handle);
 		return 0;
 	}
 	if(gif_header.magic[0] != 'G' || gif_header.magic[1] != 'I' || gif_header.magic[2] != 'F') {
 		// Not a GIF file!
+        PDEBUG("not a gif \n");        
 		closepackfile(handle);
 		return 0;
 	}
-
+ PDEBUG(" here \n" );
 	gif_header.screenwidth = SwapLSB16(gif_header.screenwidth);
 	gif_header.screenheight = SwapLSB16(gif_header.screenheight);
 
@@ -525,7 +531,8 @@ static int readgif(unsigned char *buf, unsigned char *pal, int maxwidth, int max
 
 	bitdepth = (gif_header.flags & 7) + 1;
 	numcolours = (1 << bitdepth);
-
+    PDEBUG("bitdepth = %d\n",bitdepth);
+    
 	// get palette if present and if wanted
 	if(gif_header.flags & 0x80) {
 		if(pal) {
@@ -535,6 +542,7 @@ static int readgif(unsigned char *buf, unsigned char *pal, int maxwidth, int max
 				if(readpackfile(handle, pbuf, numcolours * 3) != numcolours * 3) {
 					free(pbuf);
 					pbuf = NULL;
+					PDEBUG("readpackfile failed\n");
 					return 0;
 				}
 				for(i = 0, j = 0; i < 512; i += 2, j += 3) {
@@ -545,6 +553,7 @@ static int readgif(unsigned char *buf, unsigned char *pal, int maxwidth, int max
 			} else if(pb == 768)	// 24bit
 			{
 				if(readpackfile(handle, pal, numcolours * 3) != numcolours * 3) {
+                    					PDEBUG("readpackfile failed 2\n");
 					return 0;
 				}
 			} else if(pb == 1024)	// 32bit
@@ -553,6 +562,7 @@ static int readgif(unsigned char *buf, unsigned char *pal, int maxwidth, int max
 				if(readpackfile(handle, pbuf, numcolours * 3) != numcolours * 3) {
 					free(pbuf);
 					pbuf = NULL;
+										PDEBUG("readpackfile failed 3\n");
 					return 0;
 				}
 				for(i = 0, j = 0; i < 1024; i += 4, j += 3) {
@@ -572,10 +582,15 @@ static int readgif(unsigned char *buf, unsigned char *pal, int maxwidth, int max
 	while(!done) {
 		if(readpackfile(handle, &c, 1) != 1)
 			break;
+			
+		PDEBUG("c = %d\n", c);
 		switch (c) {
+            
 			case ',':	// An image block
 
-				if(readpackfile(handle, &iblock, sizeof(iblock)) != sizeof(iblock)) {
+                PDEBUG("found image block\n");
+				if(readpackfile(handle, &iblock, 9) != 9) {
+                    					PDEBUG("readpackfile failed 4\n");
 					return 0;
 				}
 
@@ -584,11 +599,14 @@ static int readgif(unsigned char *buf, unsigned char *pal, int maxwidth, int max
 				iblock.width = SwapLSB16(iblock.width);
 				iblock.height = SwapLSB16(iblock.height);
 
+                PDEBUG("width = %d, height = %d\n", iblock.width, iblock.height);
+                
 				// get local palette if present and wanted
 				if((iblock.flags & 0x80) && pal) {
 					if(pal) {
 						i = 3 * (1 << ((iblock.flags & 0x0007) + 1));
 						if(readpackfile(handle, pal, i) != numcolours) {
+                            					PDEBUG("readpackfile failed 5\n");
 							return 0;
 						}
 					} else
@@ -596,11 +614,20 @@ static int readgif(unsigned char *buf, unsigned char *pal, int maxwidth, int max
 				}
 				// get the initial LZW code bits
 				if(readpackfile(handle, &c, 1) != 1)
+				{
+									PDEBUG("readpackfile 6 failed\n");
 					return 0;
+                }
 				if(c < 2 || c > 8)
+				{
+                    PDEBUG("c is bad = %d\n", c);
 					return 0;
+                }
 				if(!decodegifblock(handle, buf, maxwidth, maxheight, c, &iblock))
+				{
+                     PDEBUG("couldnt decodegif\n");
 					return 0;
+                }
 				break;
 			case '!':
 				// Extension block, read past it

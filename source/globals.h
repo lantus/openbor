@@ -29,6 +29,9 @@
 #include "graphics.h"
 #endif
 
+#ifdef AMIGA
+#include "amigaport.h"
+#endif
 #ifdef SDL
 #include "sdlport.h"
 #endif
@@ -54,6 +57,12 @@
 #include <ogc/conf.h>
 #include "wiiport.h"
 #endif
+
+/////////////////////////////////////////////////////////////////////////////
+
+#define printf writeToLogFile
+
+/////////////////////////////////////////////////////////////////////////////
 
 extern int int_assert[sizeof(int) == 4 ? 1 : -1];
 

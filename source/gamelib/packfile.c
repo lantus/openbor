@@ -23,7 +23,8 @@
 	dword	headerstart
 */
 #include <assert.h>
-#include "sdlport.h"
+#ifndef SPK_SUPPORTED
+#include "amigaport.h"
 #include <fcntl.h>
 #include "debug.h"
 #include <string.h>
@@ -228,7 +229,7 @@ int isRawData() {
 #ifdef DEBUG
 int openpackfile_(const char* caller_func, const char *filename, const char *packfilename) {
 	char *pointsto;
-
+    	packfile_mode(0);
 	if(pOpenPackfile == openPackfileCached)
 		pointsto = "oPackCached";
 	else if(pOpenPackfile == openPackfile)
@@ -253,6 +254,16 @@ void sanitize(char* filename) {
 	}
 }
 
+void sanitizeAmiga(char* filename) {
+	unsigned i;
+	for(i = 0; filename[i]; i++) {
+		if(filename[i] == '/')
+			filename[i] = '\\';
+		else
+			filename[i] = tolower(filename[i]);
+	}
+}
+
 int openRealfile(const char *filename, const char *packfilename) {
 	int h, handle;
 	char buf[256];
@@ -262,7 +273,11 @@ int openRealfile(const char *filename, const char *packfilename) {
 	if(h == -1)
 		return -1;
 	
+#ifdef AMIGA
+	snprintf(buf, sizeof buf, "%s%s", packfilename, filename);
+#else	
 	snprintf(buf, sizeof buf, "%s/%s", packfilename, filename);
+#endif	
 	sanitize(buf + l);
 
 	packfilepointer[h] = 0;
@@ -298,7 +313,7 @@ int openPackfile(const char *filename, const char *packfilename) {
 		return -1;
 	
 	snprintf(buf, sizeof buf, "%s", filename);
-	sanitize(buf);
+	sanitizeAmiga(buf);
 
 	packfilepointer[h] = 0;
 
@@ -309,7 +324,7 @@ int openPackfile(const char *filename, const char *packfilename) {
 	}
 
 	// Read magic dword ("PACK" identifier)
-	if(read(handle, &magic, 4) != 4 || magic != SwapLSB32(PACKMAGIC)) {
+	if(read(handle, &magic, 4) != 4 || magic != SwapLSB32(PACKMAGIC)) { 
 		PDEBUG("err magic\n");
 		close(handle);
 		return -1;
@@ -349,12 +364,15 @@ int openPackfile(const char *filename, const char *packfilename) {
 		pn.filesize = SwapLSB32(pn.filesize);
 		pn.filestart = SwapLSB32(pn.filestart);
 		pn.pns_len = SwapLSB32(pn.pns_len);
-
+ 
+        sanitizeAmiga(pn.namebuf);
+        //PDEBUG ("pn.filesize = %d\ pn.filestart = %d, pn.namebuf = %s buf=%s\n",	pn.filesize ,pn.filestart ,pn.namebuf, buf);
 		if(strcmp(buf, pn.namebuf) == 0) {
 			packhandle[h] = handle;
 			packfilesize[h] = pn.filesize;
 			lseek(handle, pn.filestart, SEEK_SET);
 			return h;
+			
 		}
 		p += pn.pns_len;
 		if(lseek(handle, p, SEEK_SET) == -1) {
@@ -961,3 +979,4 @@ int packfile_music_play(struct fileliststruct *filelist, FILE * bgmFile, int bgm
 	return 1;
 }
 
+#endif

@@ -42,9 +42,9 @@ typedef enum MY_TOKEN_TYPE {
 ******************************************************************************/
 typedef struct Token {
 	MY_TOKEN_TYPE theType;
-	char theSource[MAX_TOKEN_LENGTH + 1];
+	CHAR theSource[MAX_TOKEN_LENGTH + 1];
 	TEXTPOS theTextPosition;
-	u32 charOffset;
+	ULONG charOffset;
 } Token;
 
 /******************************************************************************
@@ -54,23 +54,23 @@ typedef struct Token {
 *  parser.
 ******************************************************************************/
 typedef struct Lexer {
-	const char* thePath;
-	const char* ptheSource;
+	LPCSTR thePath;
+	LPCSTR ptheSource;
 	pp_parser preprocessor;
-	char *pcurChar;
+	CHAR *pcurChar;
 	TEXTPOS theTokenPosition;
 } Lexer;
 
 
 //Constructor
-void Token_Init(Token * ptoken, MY_TOKEN_TYPE theType, const char* theSource, TEXTPOS theTextPosition, u32 charOffset);
-void Lexer_Init(Lexer * plexer, pp_context * pcontext, const char* thePath, char* theSource, TEXTPOS theStartingPosition);
+void Token_Init(Token * ptoken, MY_TOKEN_TYPE theType, LPCSTR theSource, TEXTPOS theTextPosition, ULONG charOffset);
+void Lexer_Init(Lexer * plexer, pp_context * pcontext, LPCSTR thePath, LPSTR theSource, TEXTPOS theStartingPosition);
 void Lexer_Clear(Lexer * plexer);
-s32 Lexer_GetNextToken(Lexer * plexer, Token * theNextToken);
-s32 Lexer_GetTokenIdentifier(Lexer * plexer, Token * theNextToken);
-s32 Lexer_GetTokenNumber(Lexer * plexer, Token * theNextToken);
-s32 Lexer_GetTokenStringLiteral(Lexer * plexer, Token * theNextToken);
-s32 Lexer_GetTokenSymbol(Lexer * plexer, Token * theNextToken);
-s32 Lexer_SkipComment(Lexer * lexer, COMMENT_TYPE theType);
+HRESULT Lexer_GetNextToken(Lexer * plexer, Token * theNextToken);
+HRESULT Lexer_GetTokenIdentifier(Lexer * plexer, Token * theNextToken);
+HRESULT Lexer_GetTokenNumber(Lexer * plexer, Token * theNextToken);
+HRESULT Lexer_GetTokenStringLiteral(Lexer * plexer, Token * theNextToken);
+HRESULT Lexer_GetTokenSymbol(Lexer * plexer, Token * theNextToken);
+HRESULT Lexer_SkipComment(Lexer * lexer, COMMENT_TYPE theType);
 
 #endif

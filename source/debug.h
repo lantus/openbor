@@ -1,12 +1,11 @@
 #ifndef DEBUG_H
 #define DEBUG_H
 
-#include <stdio.h>
-
 #ifdef DEBUG
+#include <stdio.h>
 # define PDEBUG(fmt, args...) do { fprintf(stderr,"DEBUG: "fmt, ## args); fflush(stderr); } while (0)
 #else
-# define PDEBUG(fmt, args...) do { } while(0)
+# define PDEBUG(fmt, args...)
 #endif
 
 #endif

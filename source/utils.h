@@ -9,7 +9,12 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#include "debug.h"
+#ifdef DEBUG
+#include <stdio.h>
+# define PDEBUG(fmt, args...) do { fprintf(stderr,"DEBUG: "fmt, ## args); fflush(stderr); } while (0)
+#else
+# define PDEBUG(fmt, args...)
+#endif
 
 #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof(arr[0]))
 
@@ -26,10 +31,8 @@ extern char debug_msg[2048];
 extern unsigned long debug_time;
 
 // *** FUNCTIONS DECLARATIONS ***
-#define LOGHANDLE stderr
-#define writeToLogFile(fmt...) fprintf(LOGHANDLE, fmt)
-#define SCRIPTLOGHANDLE stderr
-#define writeToScriptLog(fmt...) fprintf(SCRIPTLOGHANDLE, fmt)
+void writeToLogFile(const char *, ...);
+void writeToScriptLog(const char *msg);
 
 int fileExists(char *fnam);
 int dirExists(char *dname, int create);
@@ -59,6 +62,8 @@ char *commaprint(u64 n);
 void char_to_lower(char *dst, char *src, size_t maxlen);
 void int_min_max(int* candidate, int min, int max);
 void short_min_max(short* candidate, short min, short max);
+
+void Array_Check_Size(const char *f_caller, char **array, int new_size, int *curr_size_allocated, int grow_step);
 
 #ifndef MAX
 #define MAX(a, b) ((a) > (b) ? (a) : (b))

@@ -42,7 +42,7 @@ void ParserSet_Clear(ParserSet * pset) {
 }
 
 
-bool ParserSet_First(ParserSet * pset, PRODUCTION theProduction, MY_TOKEN_TYPE theToken) {
+BOOL ParserSet_First(ParserSet * pset, PRODUCTION theProduction, MY_TOKEN_TYPE theToken) {
 	MY_TOKEN_TYPE *ptr = NULL;
 	ptr = pset->FirstSet[theProduction];
 	while((*ptr) != END_OF_TOKENS) {
@@ -53,7 +53,7 @@ bool ParserSet_First(ParserSet * pset, PRODUCTION theProduction, MY_TOKEN_TYPE t
 	return FALSE;
 }
 
-bool ParserSet_Follow(ParserSet * pset, PRODUCTION theProduction, MY_TOKEN_TYPE theToken) {
+BOOL ParserSet_Follow(ParserSet * pset, PRODUCTION theProduction, MY_TOKEN_TYPE theToken) {
 	MY_TOKEN_TYPE *ptr = NULL;
 	ptr = pset->FollowSet[theProduction];
 	while((*ptr) != END_OF_TOKENS) {

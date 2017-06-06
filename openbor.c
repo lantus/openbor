@@ -522,13 +522,13 @@ int getsyspropertybyindex(ScriptVariant * var, int index) {
 					if(!level)
 						return 0;
 					if(index == _e_xpos)
-						var->dblVal = (double) advancex;
+						var->dblVal = (DOUBLE) advancex;
 					else
-						var->dblVal = (double) advancey;
+						var->dblVal = (DOUBLE) advancey;
 					break;
-				case _e_lasthita: var->dblVal = (double) (lasthita); break;
-				case _e_lasthitx: var->dblVal = (double) (lasthitx); break;
-				case _e_lasthitz: var->dblVal = (double) (lasthitz); break;
+				case _e_lasthita: var->dblVal = (DOUBLE) (lasthita); break;
+				case _e_lasthitx: var->dblVal = (DOUBLE) (lasthitx); break;
+				case _e_lasthitz: var->dblVal = (DOUBLE) (lasthitz); break;
 				default:
 					assert(0);
 			}
@@ -541,10 +541,10 @@ int getsyspropertybyindex(ScriptVariant * var, int index) {
 		case _e_player3: case _e_player4:
 			ScriptVariant_ChangeType(var, VT_PTR);
 			switch(index) {
-				case _e_player: case _e_player1: var->ptrVal = (void*) player; break;
-				case _e_player2: var->ptrVal = (void*) (player + 1); break;
-				case _e_player3: var->ptrVal = (void*) (player + 2); break;
-				case _e_player4: var->ptrVal = (void*) (player + 3); break;
+				case _e_player: case _e_player1: var->ptrVal = (VOID *) player; break;
+				case _e_player2: var->ptrVal = (VOID *) (player + 1); break;
+				case _e_player3: var->ptrVal = (VOID *) (player + 2); break;
+				case _e_player4: var->ptrVal = (VOID *) (player + 3); break;
 				default: assert (0);
 			}
 			break;
@@ -559,40 +559,40 @@ int getsyspropertybyindex(ScriptVariant * var, int index) {
 		case _e_totalram: case _e_freeram: case _e_usedram:
 			ScriptVariant_ChangeType(var, VT_INTEGER);
 			switch (index) {
-				case _e_count_enemies: var->lVal = (s32) count_ents(TYPE_ENEMY); break;
-				case _e_count_players: var->lVal = (s32) count_ents(TYPE_PLAYER); break;
-				case _e_count_npcs: var->lVal = (s32) count_ents(TYPE_NPC); break;
-				case _e_count_entities: var->lVal = (s32) ent_count; break;
-				case _e_ent_max: var->lVal = (s32) ent_max; break;
-				case _e_in_level: var->lVal = (s32) (level == NULL); break;
-				case _e_elapsed_time: var->lVal = (s32) borTime; break;
-				case _e_in_selectscreen: var->lVal = (s32) (selectScreen); break;
-				case _e_lasthitc: var->lVal = (s32) (lasthitc); break;
-				case _e_lasthitt: var->lVal = (s32) (lasthitt); break;
-				case _e_hResolution: var->lVal = (s32) videomodes.hRes; break;
-				case _e_vResolution: var->lVal = (s32) videomodes.vRes; break;
-				case _e_current_set: var->lVal = (s32) (current_set); break;
-				case _e_current_level: var->lVal = (s32) (current_level); break;
-				case _e_current_palette: var->lVal = (s32) (current_palette); break;
-				case _e_current_stage: var->lVal = (s32) (current_stage); break;
-				case _e_maxentityvars: var->lVal = (s32) max_entity_vars; break;
-				case _e_maxglobalvars: var->lVal = (s32) max_global_vars; break;
-				case _e_maxindexedvars: var->lVal = (s32) max_indexed_vars; break;
-				case _e_maxplayers: var->lVal = (s32) maxplayers[current_set]; break;
-				case _e_maxscriptvars: var->lVal = (s32) max_script_vars; break;
-				case _e_models_cached: var->lVal = (s32) models_cached; break;
-				case _e_models_loaded: var->lVal = (s32) models_loaded; break;
-				case _e_numpalettes: var->lVal = (s32) (level->numpalettes); break;
-				case _e_pixelformat: var->lVal = (s32) pixelformat; break;			
-				case _e_player_max_z: var->lVal = (s32) (PLAYER_MAX_Z); break;
-				case _e_player_min_z: var->lVal = (s32) (PLAYER_MIN_Z); break;
-				case _e_lightx: var->lVal = (s32) (light[0]); break;
-				case _e_lightz: var->lVal = (s32) (light[1]); break;
-				case _e_shadowalpha: var->lVal = (s32) shadowalpha; break;
-				case _e_shadowcolor: var->lVal = (s32) colors.shadow; break;
-				case _e_slowmotion: var->lVal = (s32) slowmotion[0]; break;
-				case _e_slowmotion_duration: var->lVal = (s32) slowmotion[1]; break;
-				case _e_game_paused: var->lVal = (s32) pause; break;
+				case _e_count_enemies: var->lVal = (LONG) count_ents(TYPE_ENEMY); break;
+				case _e_count_players: var->lVal = (LONG) count_ents(TYPE_PLAYER); break;
+				case _e_count_npcs: var->lVal = (LONG) count_ents(TYPE_NPC); break;
+				case _e_count_entities: var->lVal = (LONG) ent_count; break;
+				case _e_ent_max: var->lVal = (LONG) ent_max; break;
+				case _e_in_level: var->lVal = (LONG) (level == NULL); break;
+				case _e_elapsed_time: var->lVal = (LONG) borTime; break;
+				case _e_in_selectscreen: var->lVal = (LONG) (selectScreen); break;
+				case _e_lasthitc: var->lVal = (LONG) (lasthitc); break;
+				case _e_lasthitt: var->lVal = (LONG) (lasthitt); break;
+				case _e_hResolution: var->lVal = (LONG) videomodes.hRes; break;
+				case _e_vResolution: var->lVal = (LONG) videomodes.vRes; break;
+				case _e_current_set: var->lVal = (LONG) (current_set); break;
+				case _e_current_level: var->lVal = (LONG) (current_level); break;
+				case _e_current_palette: var->lVal = (LONG) (current_palette); break;
+				case _e_current_stage: var->lVal = (LONG) (current_stage); break;
+				case _e_maxentityvars: var->lVal = (LONG) max_entity_vars; break;
+				case _e_maxglobalvars: var->lVal = (LONG) max_global_vars; break;
+				case _e_maxindexedvars: var->lVal = (LONG) max_indexed_vars; break;
+				case _e_maxplayers: var->lVal = (LONG) maxplayers[current_set]; break;
+				case _e_maxscriptvars: var->lVal = (LONG) max_script_vars; break;
+				case _e_models_cached: var->lVal = (LONG) models_cached; break;
+				case _e_models_loaded: var->lVal = (LONG) models_loaded; break;
+				case _e_numpalettes: var->lVal = (LONG) (level->numpalettes); break;
+				case _e_pixelformat: var->lVal = (LONG) pixelformat; break;			
+				case _e_player_max_z: var->lVal = (LONG) (PLAYER_MAX_Z); break;
+				case _e_player_min_z: var->lVal = (LONG) (PLAYER_MIN_Z); break;
+				case _e_lightx: var->lVal = (LONG) (light[0]); break;
+				case _e_lightz: var->lVal = (LONG) (light[1]); break;
+				case _e_shadowalpha: var->lVal = (LONG) shadowalpha; break;
+				case _e_shadowcolor: var->lVal = (LONG) colors.shadow; break;
+				case _e_slowmotion: var->lVal = (LONG) slowmotion[0]; break;
+				case _e_slowmotion_duration: var->lVal = (LONG) slowmotion[1]; break;
+				case _e_game_paused: var->lVal = (LONG) pause; break;
 				case _e_totalram: var->lVal = 64 * 1024; break;
 				case _e_freeram: var->lVal = 63 * 1024; break;
 				case _e_usedram: var->lVal = 1024; break;
@@ -606,10 +606,10 @@ int getsyspropertybyindex(ScriptVariant * var, int index) {
 				return 0;
 			ScriptVariant_ChangeType(var, VT_INTEGER);
 			switch (index) {
-				case _e_game_speed: var->lVal = (s32) GAME_SPEED; break;
-				case _e_gfx_y_offset: var->lVal = (s32) gfx_y_offset; break;
-				case _e_levelwidth: var->lVal = (s32) (level->width); break;
-				case _e_levelheight: var->lVal = (s32) (panel_height); break;
+				case _e_game_speed: var->lVal = (LONG) GAME_SPEED; break;
+				case _e_gfx_y_offset: var->lVal = (LONG) gfx_y_offset; break;
+				case _e_levelwidth: var->lVal = (LONG) (level->width); break;
+				case _e_levelheight: var->lVal = (LONG) (panel_height); break;
 				default: assert(0); break;
 			}
 			break;
@@ -625,8 +625,8 @@ int getsyspropertybyindex(ScriptVariant * var, int index) {
 // change a system variant, used by script
 int changesyspropertybyindex(int index, ScriptVariant * value) {
 	//char* tempstr = NULL;
-	s32 ltemp;
-	//double dbltemp;
+	LONG ltemp;
+	//DOUBLE dbltemp;
 
 	// This enum is replicated in mapstrings_changesystemvariant in
 	// openborscript.c. If you change one, you must change the other as well!!!!
@@ -877,14 +877,14 @@ static void execute_script_default(s_script_args* args, Script* dest_script) {
 				ScriptVariant_ChangeType(&tempvar, tuples[i].vt);
 				switch(tuples[i].vt) {
 					case VT_PTR:
-						tempvar.ptrVal = (void*) tuples[i].value;
+						tempvar.ptrVal = (VOID *) tuples[i].value;
 						break;
 					case VT_INTEGER:
-						tempvar.lVal = (s32) tuples[i].value;
+						tempvar.lVal = (LONG) tuples[i].value;
 						break;
 					case VT_DECIMAL:
 						memcpy(&tmp_float, &tuples[i].value, sizeof(float));
-						tempvar.dblVal = (double) tmp_float;
+						tempvar.dblVal = (DOUBLE) tmp_float;
 						break;
 					default:
 						assert(0);
@@ -1207,7 +1207,7 @@ void execute_spawn_script(s_spawn_entry * p, entity * e) {
 		if(e) {
 			ScriptVariant_Init(&tempvar);
 			ScriptVariant_ChangeType(&tempvar, VT_PTR);
-			tempvar.ptrVal = (void*) e;
+			tempvar.ptrVal = (VOID *) e;
 			Script_Set_Local_Variant("self", &tempvar);
 		}
 		Script_Execute(tempnode->spawn_script);
@@ -2816,12 +2816,10 @@ void free_models(void) {
 s_anim *alloc_anim() {
 	s_anim_list *curr = NULL, *head = NULL;
 	curr = malloc(sizeof(s_anim_list));
-	if(!curr) return NULL;
-	curr->anim = calloc(1, sizeof(s_anim));
-	if(!curr->anim) {
-		free(curr);
+	curr->anim = malloc(sizeof(s_anim));
+	if(curr == NULL || curr->anim == NULL)
 		return NULL;
-	}
+	memset(curr->anim, 0, sizeof(s_anim));
 	if(anim_list == NULL) {
 		anim_list = curr;
 		anim_list->next = NULL;
@@ -3853,8 +3851,13 @@ int lcmHandleCommandCancel(ArgList * arglist, s_model *newchar, s_anim* newanim,
 //stringswitch_gen add lcm_cmdanim "faint"
 //stringswitch_gen add lcm_cmdanim "dodge"
 //stringswitch_gen add lcm_cmdanim "special"
+//stringswitch_gen add lcm_cmdanim "special1"
+//stringswitch_gen add lcm_cmdanim "special2"
+//stringswitch_gen add lcm_cmdanim "special3"
 //stringswitch_gen add lcm_cmdanim "jumpspecial"
 //stringswitch_gen add lcm_cmdanim "jumpattack"
+//stringswitch_gen add lcm_cmdanim "jumpattack2"
+//stringswitch_gen add lcm_cmdanim "jumpattack3"
 //stringswitch_gen add lcm_cmdanim "jumpforward"
 //stringswitch_gen add lcm_cmdanim "runjumpattack"
 //stringswitch_gen add lcm_cmdanim "runattack"
@@ -3877,10 +3880,15 @@ int lcmHandleCommandCancel(ArgList * arglist, s_model *newchar, s_anim* newanim,
 //stringswitch_gen add lcm_cmdanim "grabbedbackwalk"
 //stringswitch_gen add lcm_cmdanim "grabbedturn"
 //stringswitch_gen add lcm_cmdanim "grabattack"
+//stringswitch_gen add lcm_cmdanim "grabattack2"
 //stringswitch_gen add lcm_cmdanim "grabforward"
+//stringswitch_gen add lcm_cmdanim "grabforward2"
 //stringswitch_gen add lcm_cmdanim "grabbackward"
+//stringswitch_gen add lcm_cmdanim "grabbackward2"
 //stringswitch_gen add lcm_cmdanim "grabup"
+//stringswitch_gen add lcm_cmdanim "grabup2"
 //stringswitch_gen add lcm_cmdanim "grabdown"
+//stringswitch_gen add lcm_cmdanim "grabdown2"
 //stringswitch_gen add lcm_cmdanim "spawn"
 //stringswitch_gen add lcm_cmdanim "respawn"
 //stringswitch_gen add lcm_cmdanim "throw"
@@ -3900,6 +3908,7 @@ int lcmHandleCommandCancel(ArgList * arglist, s_model *newchar, s_anim* newanim,
 //stringswitch_gen add lcm_cmdanim "blockpain"
 //stringswitch_gen add lcm_cmdanim "duckattack"
 //stringswitch_gen add lcm_cmdanim "walkoff"
+
 //stringswitch_gen add lcm_cmdanim "attack"
 //stringswitch_gen add lcm_cmdanim "walk"
 //stringswitch_gen add lcm_cmdanim "up"
@@ -3920,8 +3929,7 @@ int lcmHandleCommandAnim(ArgList * arglist, s_model *newchar, s_anim **newanim, 
 	char lowercase_buf[32];
 	
 	*value = GET_ARGP(1);
-	// if a command ends with a number, we set commandIndex to that number and remove it from the string
-	// this assumes that the ANI_ enum members are ordered like ATTACK1, ATTACK2, etc.
+	
 	char_to_lower(lowercase_buf, *value, sizeof(lowercase_buf));
 	while(l > 0 && lowercase_buf[l - 1] >= '0' && lowercase_buf[l - 1] <= '9') {
 		endsWithNumber = 1;
@@ -3933,7 +3941,7 @@ int lcmHandleCommandAnim(ArgList * arglist, s_model *newchar, s_anim **newanim, 
 		if(commandIndex < 1)
 			commandIndex = 1;		
 	}
-	
+
 	// Create new animation
 	(*newanim) = alloc_anim();
 	if(!(*newanim)) {
@@ -3980,122 +3988,294 @@ int lcmHandleCommandAnim(ArgList * arglist, s_model *newchar, s_anim **newanim, 
 		(*newanim)->custstar = (*newanim)->custpshotno = -1;
 	memset((*newanim)->quakeframe, 0, sizeof((*newanim)->quakeframe));
 	
-#define AEM(string, enum_member) [stringswitch_enumerator_member_name(lcm_cmdanim, string)] = enum_member
-	static const ani_types enum_mapping[] = {
-		AEM(waiting, ANI_SELECT),
-		AEM(sleep, ANI_SLEEP),
-		AEM(run, ANI_RUN),
-		AEM(jump, ANI_JUMP),
-		AEM(duck, ANI_DUCK),
-		AEM(land, ANI_LAND),
-		AEM(spain, ANI_SHOCKPAIN),
-		AEM(bpain, ANI_BURNPAIN),
-		AEM(shock, ANI_SHOCK),
-		AEM(burn, ANI_BURN),
-		AEM(sdie, ANI_SHOCKDIE),
-		AEM(bdie, ANI_BURNDIE),
-		AEM(chipdeath, ANI_CHIPDEATH),
-		AEM(guardbreak, ANI_GUARDBREAK),
-		AEM(riseb, ANI_RISEB),
-		AEM(rises, ANI_RISES),
-		AEM(riseattackb, ANI_RISEATTACKB),
-		AEM(riseattacks, ANI_RISEATTACKS),
-		AEM(select, ANI_PICK),
-		AEM(throwattack, ANI_THROWATTACK),
-		AEM(upper, ANI_UPPER),
-		AEM(cant, ANI_CANT),
-		AEM(jumpcant, ANI_JUMPCANT),
-		AEM(charge, ANI_CHARGE),
-		AEM(faint, ANI_FAINT),
-		AEM(dodge, ANI_DODGE),
-		AEM(jumpforward, ANI_JUMPFORWARD),
-		AEM(runjumpattack, ANI_RUNJUMPATTACK),
-		AEM(runattack, ANI_RUNATTACK),
-		AEM(attackup, ANI_ATTACKUP),
-		AEM(attackdown, ANI_ATTACKDOWN),
-		AEM(attackforward, ANI_ATTACKFORWARD),
-		AEM(attackbackward, ANI_ATTACKBACKWARD),
-		AEM(attackboth, ANI_ATTACKBOTH),
-		AEM(get, ANI_GET),
-		AEM(grab, ANI_GRAB),
-		AEM(grabwalk, ANI_GRABWALK),
-		AEM(grabwalkup, ANI_GRABWALKUP),
-		AEM(grabwalkdown, ANI_GRABWALKDOWN),
-		AEM(grabbackwalk, ANI_GRABBACKWALK),
-		AEM(grabturn, ANI_GRABTURN),
-		AEM(grabbed, ANI_GRABBED),
-		AEM(grabbedwalk, ANI_GRABBEDWALK),
-		AEM(grabbedwalkup, ANI_GRABWALKUP),
-		AEM(grabbedwalkdown, ANI_GRABWALKDOWN),
-		AEM(grabbedbackwalk, ANI_GRABBEDBACKWALK),
-		AEM(grabbedturn, ANI_GRABBEDTURN),
-		AEM(spawn, ANI_SPAWN),
-		AEM(respawn, ANI_RESPAWN),
-		AEM(throw, ANI_THROW),
-		AEM(block, ANI_BLOCK),
-		AEM(chargeattack, ANI_CHARGEATTACK),
-		AEM(vault, ANI_VAULT),
-		AEM(turn, ANI_TURN),
-		AEM(forwardjump, ANI_FORWARDJUMP),
-		AEM(runjump, ANI_RUNJUMP),
-		AEM(jumpland, ANI_JUMPLAND),
-		AEM(jumpdelay, ANI_JUMPDELAY),
-		AEM(hitwall, ANI_HITWALL),
-		AEM(slide, ANI_SLIDE),
-		AEM(runslide, ANI_RUNSLIDE),
-		AEM(blockpainb, ANI_BLOCKPAINB),
-		AEM(blockpains, ANI_BLOCKPAINS),
-		AEM(duckattack, ANI_DUCKATTACK),
-		AEM(walkoff, ANI_WALKOFF),
-		AEM(attack, ANI_ATTACK),
-		AEM(walk, ANI_WALK),
-		AEM(up, ANI_UP),
-		AEM(down, ANI_DOWN),
-		AEM(backwalk, ANI_BACKWALK),
-		AEM(idle, ANI_IDLE),
-		AEM(follow, ANI_FOLLOW),
-		AEM(jumpattack, ANI_JUMPATTACK),
-		AEM(grabattack, ANI_GRABATTACK),
-		AEM(grabforward, ANI_GRABFORWARD),
-		AEM(grabbackward, ANI_GRABBACKWARD),
-		AEM(grabup, ANI_GRABUP),
-		AEM(grabdown, ANI_GRABDOWN),
-		AEM(jumpspecial, ANI_JUMPSPECIAL),
-		AEM(special, ANI_SPECIAL),
-		AEM(pain, ANI_PAIN),
-		AEM(rise, ANI_RISE),
-		AEM(death, ANI_DIE),
-		AEM(fall, ANI_FALL),
-		AEM(riseattack, ANI_RISEATTACK),
-		AEM(blockpain, ANI_BLOCKPAIN),
-		AEM(freespecial, ANI_FREESPECIAL),
-	};
-#undef AEM
-	
-	int strswitch_result = get_stringswitch_value(lcm_cmdanim, lowercase_buf, l);
-	if (strswitch_result == stringswitch_enumerator_default_member_name(lcm_cmdanim)) return 1;
-	(*ani_id) = enum_mapping[strswitch_result];
-	(*ani_id) += (commandIndex - 1);
-	
-	switch(strswitch_result) {
+	stringswitch_l(lcm_cmdanim, lowercase_buf, l) {
+		stringcase(lcm_cmdanim, waiting):
+			(*ani_id) = ANI_SELECT;
+			break;
+		stringcase(lcm_cmdanim, sleep):
+			(*ani_id) = ANI_SLEEP;
+			break;
+		stringcase(lcm_cmdanim, run):
+			(*ani_id) = ANI_RUN;
+			break;
 		stringcase(lcm_cmdanim, jump):
+			(*ani_id) = ANI_JUMP;
 			(*newanim)->range[0] = 50;	// Used for enemies that jump on walls
 			(*newanim)->range[1] = 60;	// Used for enemies that jump on walls
 			break;
-		stringcase(lcm_cmdanim, burn):
+		stringcase(lcm_cmdanim, duck):
+			(*ani_id) = ANI_DUCK;
+			break;
+		stringcase(lcm_cmdanim, land):
+			(*ani_id) = ANI_LAND;
+			break;
+		stringcase(lcm_cmdanim, spain):
+			// If shock attacks don't knock opponent down, play this
+			(*ani_id) = ANI_SHOCKPAIN;
+			break;
+		stringcase(lcm_cmdanim, bpain):
+			// If burn attacks don't knock opponent down, play this
+			(*ani_id) = ANI_BURNPAIN;
+			break;
 		stringcase(lcm_cmdanim, shock):
+			// If shock attacks do knock opponent down, play this
+			(*ani_id) = ANI_SHOCK;
 			(*newanim)->bounce = 4;
 			break;
+		stringcase(lcm_cmdanim, burn):
+			// If burn attacks do knock opponent down, play this
+			(*ani_id) = ANI_BURN;
+			(*newanim)->bounce = 4;
+			break;
+		stringcase(lcm_cmdanim, sdie):
+			(*ani_id) = ANI_SHOCKDIE;
+			break;
+		stringcase(lcm_cmdanim, bdie):
+			(*ani_id) = ANI_BURNDIE;
+			break;
+		stringcase(lcm_cmdanim, chipdeath):
+			(*ani_id) = ANI_CHIPDEATH;
+			break;
+		stringcase(lcm_cmdanim, guardbreak):
+			(*ani_id) = ANI_GUARDBREAK;
+			break;
+		stringcase(lcm_cmdanim, riseb):
+			(*ani_id) = ANI_RISEB;
+			break;
+		stringcase(lcm_cmdanim, rises):
+			(*ani_id) = ANI_RISES;
+			break;
+		stringcase(lcm_cmdanim, riseattackb):
+			(*ani_id) = ANI_RISEATTACKB;
+			break;
+		stringcase(lcm_cmdanim, riseattacks):
+			(*ani_id) = ANI_RISEATTACKS;
+			break;
+		stringcase(lcm_cmdanim, select):
+			(*ani_id) = ANI_PICK;
+			break;
+		stringcase(lcm_cmdanim, throwattack):
+			(*ani_id) = ANI_THROWATTACK;
+			break;
 		stringcase(lcm_cmdanim, upper):
+			(*ani_id) = ANI_UPPER;
 			attack->counterattack = 100;	//default to 100
 			(*newanim)->range[0] = -10;
 			(*newanim)->range[1] = 120;
 			break;
+		stringcase(lcm_cmdanim, cant):
+			(*ani_id) = ANI_CANT;
+			break;
+		stringcase(lcm_cmdanim, jumpcant):
+			(*ani_id) = ANI_JUMPCANT;
+			break;
+		stringcase(lcm_cmdanim, charge):
+			(*ani_id) = ANI_CHARGE;
+			break;
+		stringcase(lcm_cmdanim, faint):
+			(*ani_id) = ANI_FAINT;
+			break;
+		stringcase(lcm_cmdanim, dodge):
+			(*ani_id) = ANI_DODGE;
+			break;
+		stringcase(lcm_cmdanim, special):
+		stringcase(lcm_cmdanim, special1):
+			(*ani_id) = ANI_SPECIAL;
+			(*newanim)->energycost[0] = 6;
+			break;
+		stringcase(lcm_cmdanim, special2):
+			(*ani_id) = ANI_SPECIAL2;
+			break;
+		stringcase(lcm_cmdanim, special3):
+		stringcase(lcm_cmdanim, jumpspecial):
+			(*ani_id) = ANI_JUMPSPECIAL;
+			break;
+		stringcase(lcm_cmdanim, jumpattack):
+			(*ani_id) = ANI_JUMPATTACK;
+			if(newchar->jumpheight == 4) {
+				(*newanim)->range[0] = 150;
+				(*newanim)->range[1] = 200;
+			}
+			break;
+		stringcase(lcm_cmdanim, jumpattack2):
+			(*ani_id) = ANI_JUMPATTACK2;
+			break;
+		stringcase(lcm_cmdanim, jumpattack3):
+			(*ani_id) = ANI_JUMPATTACK3;
+			break;
+		stringcase(lcm_cmdanim, jumpforward):
+			(*ani_id) = ANI_JUMPFORWARD;
+			break;
+		stringcase(lcm_cmdanim, runjumpattack):
+			(*ani_id) = ANI_RUNJUMPATTACK;
+			break;
+		stringcase(lcm_cmdanim, runattack):
+			(*ani_id) = ANI_RUNATTACK;	// New attack for when a player is running
+			break;
+		stringcase(lcm_cmdanim, attackup):
+			(*ani_id) = ANI_ATTACKUP;	// New attack for when a player presses u u
+			break;
+		stringcase(lcm_cmdanim, attackdown):
+			(*ani_id) = ANI_ATTACKDOWN;	// New attack for when a player presses d d
+			break;
+		stringcase(lcm_cmdanim, attackforward):
+			(*ani_id) = ANI_ATTACKFORWARD;	// New attack for when a player presses f f
+			break;
+		stringcase(lcm_cmdanim, attackbackward):
+			(*ani_id) = ANI_ATTACKBACKWARD;	// New attack for when a player presses b a
+			break;
+		stringcase(lcm_cmdanim, attackboth):
+			(*ani_id) = ANI_ATTACKBOTH;
+			break;
+		stringcase(lcm_cmdanim, get):
+			(*ani_id) = ANI_GET;
+			break;
+		stringcase(lcm_cmdanim, grab):
+			(*ani_id) = ANI_GRAB;
+			break;
+		stringcase(lcm_cmdanim, grabwalk):
+			(*ani_id) = ANI_GRABWALK;
+			break;
+		stringcase(lcm_cmdanim, grabwalkup):
+			(*ani_id) = ANI_GRABWALKUP;
+			break;
+		stringcase(lcm_cmdanim, grabwalkdown):
+			(*ani_id) = ANI_GRABWALKDOWN;
+			break;
+		stringcase(lcm_cmdanim, grabbackwalk):
+			(*ani_id) = ANI_GRABBACKWALK;
+			break;
+		stringcase(lcm_cmdanim, grabturn):
+			(*ani_id) = ANI_GRABTURN;
+			break;
+		stringcase(lcm_cmdanim, grabbed):
+			// New grabbed animation for when grabbed
+			(*ani_id) = ANI_GRABBED;
+			break;
+		stringcase(lcm_cmdanim, grabbedwalk):
+			// New animation for when grabbed and forced to walk
+			(*ani_id) = ANI_GRABBEDWALK;
+			break;
+		stringcase(lcm_cmdanim, grabbedwalkup):
+			(*ani_id) = ANI_GRABWALKUP;
+			break;
+		stringcase(lcm_cmdanim, grabbedwalkdown):
+			(*ani_id) = ANI_GRABWALKDOWN;
+			break;
+		stringcase(lcm_cmdanim, grabbedbackwalk):
+			(*ani_id) = ANI_GRABBEDBACKWALK;
+			break;
+		stringcase(lcm_cmdanim, grabbedturn):
+			(*ani_id) = ANI_GRABBEDTURN;
+			break;
+		stringcase(lcm_cmdanim, grabattack):
+			(*ani_id) = ANI_GRABATTACK;
+			(*newanim)->attackone = 1;	// default to 1, attack one one opponent
+			break;
+		stringcase(lcm_cmdanim, grabattack2):
+			(*ani_id) = ANI_GRABATTACK2;
+			(*newanim)->attackone = 1;
+			break;
+		stringcase(lcm_cmdanim, grabforward):
+			// New grab attack for when pressing forward attack
+			(*ani_id) = ANI_GRABFORWARD;
+			(*newanim)->attackone = 1;
+			break;
+		stringcase(lcm_cmdanim, grabforward2):
+			// New grab attack for when pressing forward attack
+			(*ani_id) = ANI_GRABFORWARD2;
+			(*newanim)->attackone = 1;
+			break;
+		stringcase(lcm_cmdanim, grabbackward):
+			// New grab attack for when pressing backward attack
+			(*ani_id) = ANI_GRABBACKWARD;
+			(*newanim)->attackone = 1;
+			break;
+		stringcase(lcm_cmdanim, grabbackward2):
+			// New grab attack for when pressing backward attack
+			(*ani_id) = ANI_GRABBACKWARD2;
+			(*newanim)->attackone = 1;
+			break;
+		stringcase(lcm_cmdanim, grabup):
+			// New grab attack for when pressing up attack
+			(*ani_id) = ANI_GRABUP;
+			(*newanim)->attackone = 1;
+			break;
+		stringcase(lcm_cmdanim, grabup2):
+			// New grab attack for when pressing up attack
+			(*ani_id) = ANI_GRABUP2;
+			(*newanim)->attackone = 1;
+			break;
+		stringcase(lcm_cmdanim, grabdown):
+			// New grab attack for when pressing down attack
+			(*ani_id) = ANI_GRABDOWN;
+			(*newanim)->attackone = 1;
+			break;
+		stringcase(lcm_cmdanim, grabdown2):
+			// New grab attack for when pressing down attack
+			(*ani_id) = ANI_GRABDOWN2;
+			(*newanim)->attackone = 1;
+			break;
+		stringcase(lcm_cmdanim, spawn):
+			//  spawn/respawn works separately now
+			(*ani_id) = ANI_SPAWN;
+			break;
+		stringcase(lcm_cmdanim, respawn):
+			//  spawn/respawn works separately now
+			(*ani_id) = ANI_RESPAWN;
+			break;
+		stringcase(lcm_cmdanim, throw):
+			(*ani_id) = ANI_THROW;
+			break;
 		stringcase(lcm_cmdanim, block):
 			// Now enemies can block attacks on occasion
+			(*ani_id) = ANI_BLOCK;
 			(*newanim)->range[0] = 1;
 			(*newanim)->range[1] = 100;
 			break;
+		stringcase(lcm_cmdanim, chargeattack):
+			(*ani_id) = ANI_CHARGEATTACK;
+			break;
+		stringcase(lcm_cmdanim, vault):
+			(*ani_id) = ANI_VAULT;
+			break;
+		stringcase(lcm_cmdanim, turn):
+			(*ani_id) = ANI_TURN;
+			break;
+		stringcase(lcm_cmdanim, forwardjump):
+			(*ani_id) = ANI_FORWARDJUMP;
+			break;
+		stringcase(lcm_cmdanim, runjump):
+			(*ani_id) = ANI_RUNJUMP;
+			break;
+		stringcase(lcm_cmdanim, jumpland):
+			(*ani_id) = ANI_JUMPLAND;
+			break;
+		stringcase(lcm_cmdanim, jumpdelay):
+			(*ani_id) = ANI_JUMPDELAY;
+			break;
+		stringcase(lcm_cmdanim, hitwall):
+			(*ani_id) = ANI_HITWALL;
+			break;
+		stringcase(lcm_cmdanim, slide):
+			(*ani_id) = ANI_SLIDE;
+			break;
+		stringcase(lcm_cmdanim, runslide):
+			(*ani_id) = ANI_RUNSLIDE;
+			break;
+		stringcase(lcm_cmdanim, blockpainb):
+			(*ani_id) = ANI_BLOCKPAINB;
+			break;
+		stringcase(lcm_cmdanim, blockpains):
+			(*ani_id) = ANI_BLOCKPAINS;
+			break;
+		stringcase(lcm_cmdanim, duckattack):
+			(*ani_id) = ANI_DUCKATTACK;
+			break;
+		stringcase(lcm_cmdanim, walkoff):
+			(*ani_id) = ANI_WALKOFF;
+			break;
+		
 		stringcase(lcm_cmdanim, attack):
 			(*ani_id) = dyn_anims.animattacks[commandIndex - 1];
 			break;
@@ -4117,63 +4297,57 @@ int lcmHandleCommandAnim(ArgList * arglist, s_model *newchar, s_anim **newanim, 
 		stringcase(lcm_cmdanim, follow):
 			(*ani_id) = dyn_anims.animfollows[commandIndex - 1];
 			break;
-		stringcase(lcm_cmdanim, jumpattack):
-			if(commandIndex == 1 && newchar->jumpheight == 4) {
-				(*newanim)->range[0] = 150;
-				(*newanim)->range[1] = 200;
-			}
-			break;
-		stringcase(lcm_cmdanim, grabattack):
-		stringcase(lcm_cmdanim, grabforward):
-		stringcase(lcm_cmdanim, grabbackward):
-		stringcase(lcm_cmdanim, grabup):
-		stringcase(lcm_cmdanim, grabdown):
-			// New grab attack for when pressing down attack
-			(*newanim)->attackone = 1;
-			break;
-		stringcase(lcm_cmdanim, special):
-			if(commandIndex == 1) (*newanim)->energycost[0] = 6;
-			break;
 		stringcase(lcm_cmdanim, pain):
-			if(!(commandIndex < 11)) {
+			if(commandIndex < 11)
+				(*ani_id) = ANI_PAIN + (commandIndex - 1);
+			else {
 				if(commandIndex < MAX_ATKS - STA_ATKS + 1)
 					commandIndex = MAX_ATKS - STA_ATKS + 1;
 				(*ani_id) = dyn_anims.animpains[commandIndex + STA_ATKS - 1];
 			}
 			break;
 		stringcase(lcm_cmdanim, rise):
-			if(!(commandIndex < 11)) {
+			if(commandIndex < 11)
+				(*ani_id) = ANI_RISE + (commandIndex - 1);
+			else {
 				if(commandIndex < MAX_ATKS - STA_ATKS + 1)
 					commandIndex = MAX_ATKS - STA_ATKS + 1;
 				(*ani_id) = dyn_anims.animrises[commandIndex + STA_ATKS - 1];
 			}
 			break;
 		stringcase(lcm_cmdanim, death):
-			if(!(commandIndex < 11)) {
+			if(commandIndex < 11)
+				(*ani_id) = ANI_DIE + (commandIndex - 1);
+			else {
 				if(commandIndex < MAX_ATKS - STA_ATKS + 1)
 					commandIndex = MAX_ATKS - STA_ATKS + 1;
 				(*ani_id) = dyn_anims.animdies[commandIndex + STA_ATKS - 1];
 			}
 			break;
 		stringcase(lcm_cmdanim, fall):
-			if(commandIndex == 1)
+			if(commandIndex == 1) 
 				(*newanim)->bounce = 4;
-			else
-			if(!(commandIndex < 11)) {
+			if(commandIndex < 11)
+				(*ani_id) = ANI_FALL + (commandIndex - 1);
+			else {
 				if(commandIndex < MAX_ATKS - STA_ATKS + 1)
 					commandIndex = MAX_ATKS - STA_ATKS + 1;
 				(*ani_id) = dyn_anims.animfalls[commandIndex + STA_ATKS - 1];
 			}
 			break;
 		stringcase(lcm_cmdanim, riseattack):
-			if(!(commandIndex < 11)) {
+			if(commandIndex < 11)
+				(*ani_id) = ANI_RISEATTACK + (commandIndex - 1);
+			else {
 				if(commandIndex < MAX_ATKS - STA_ATKS + 1)
 					commandIndex = MAX_ATKS - STA_ATKS + 1;
 				(*ani_id) = dyn_anims.animriseattacks[commandIndex + STA_ATKS - 1];
 			}
 			break;
 		stringcase(lcm_cmdanim, blockpain):
-			if(!(commandIndex < 11)) {
+			if(commandIndex < 11)
+				(*ani_id) = ANI_BLOCKPAIN + (commandIndex - 1);
+			else {
 				if(commandIndex < MAX_ATKS - STA_ATKS + 1)
 					commandIndex = MAX_ATKS - STA_ATKS + 1;
 				(*ani_id) = dyn_anims.animblkpains[commandIndex + STA_ATKS - 1];
@@ -4211,7 +4385,7 @@ int lcmHandleCommandAnim(ArgList * arglist, s_model *newchar, s_anim **newanim, 
 			}
 			break;
 		default:
-			break;
+			return 1;
 	}
 
 	newchar->animation[(*ani_id)] = (*newanim);
@@ -7558,15 +7732,6 @@ char *llHandleCommandSpawnscript(ArgList * arglist, s_spawn_entry * next) {
 	return result;
 }
 
-static const s_hole default_hole_coords = {
-	.x = 0,
-	.z = 240,
-	.upperleft = 12,
-	.lowerleft = 1,
-	.upperright = 200,
-	.lowerright = 287,
-	.depth = 45,
-};
 
 void load_level(char *filename) {
 	char *buf;
@@ -8033,7 +8198,6 @@ void load_level(char *filename) {
 				}
 				break;
 			case CMD_LEVEL_HOLE:
-				// TODO: apparently the first parameter can be a filename, so adjust value assignment accordingly if it is a string
 				value = GET_ARG(1);	// ltb    1-18-05  adjustable hole sprites
 
 				if(holesprite < 0) {
@@ -8047,11 +8211,26 @@ void load_level(char *filename) {
 					errormessage = "Too many holes in level (check LEVEL_MAX_HOLES)!";
 					goto lCleanup;
 				}
-				for(i = 0; i < sizeof(s_hole) / sizeof(float); i++) {
-					((float*) &level->holes[level->numholes])[i] = GET_FLOAT_ARG(i + 1);
-					if(! ((float*) &level->holes[level->numholes])[i])
-						((float*) &level->holes[level->numholes])[i] = ((float*) &default_hole_coords)[i];
-				}
+				level->holes[level->numholes][0] = GET_FLOAT_ARG(1);
+				level->holes[level->numholes][1] = GET_FLOAT_ARG(2);
+				level->holes[level->numholes][2] = GET_FLOAT_ARG(3);
+				level->holes[level->numholes][3] = GET_FLOAT_ARG(4);
+				level->holes[level->numholes][4] = GET_FLOAT_ARG(5);
+				level->holes[level->numholes][5] = GET_FLOAT_ARG(6);
+				level->holes[level->numholes][6] = GET_FLOAT_ARG(7);
+
+				if(!level->holes[level->numholes][1])
+					level->holes[level->numholes][1] = 240;
+				if(!level->holes[level->numholes][2])
+					level->holes[level->numholes][2] = 12;
+				if(!level->holes[level->numholes][3])
+					level->holes[level->numholes][3] = 1;
+				if(!level->holes[level->numholes][4])
+					level->holes[level->numholes][4] = 200;
+				if(!level->holes[level->numholes][5])
+					level->holes[level->numholes][5] = 287;
+				if(!level->holes[level->numholes][6])
+					level->holes[level->numholes][6] = 45;
 				level->numholes++;
 				break;
 			case CMD_LEVEL_WALL:
@@ -9146,7 +9325,7 @@ void addscore(int playerindex, int add) {
 	if(Script_IsInitialized(game_scripts.score_script + playerindex)) {
 		ScriptVariant_Clear(&var);
 		ScriptVariant_ChangeType(&var, VT_INTEGER);
-		var.lVal = (s32) add;
+		var.lVal = (LONG) add;
 		Script_Set_Local_Variant("score", &var);
 		Script_Execute(game_scripts.score_script + playerindex);
 		ScriptVariant_Clear(&var);
@@ -10131,29 +10310,28 @@ int checkhit(entity * attacker, entity * target, int counter) {
 	return 1;
 }
 
+
+
 /*
 Calculates the coef relative to the bottom left point. This is done by figuring out how far the entity is from
 the bottom of the platform and multiplying the result by the difference of the bottom left point and the top
 left point divided by depth of the platform. The same is done for the right side, and checks to see if they are
 within the bottom/top and the left/right area.
 */
-static int testhole_or_wall(s_hole* area, float x, float z) {
+int testhole(int hole, float x, float z) {
 	float coef1, coef2;
-	if(z < area->z && z > area->z - area->depth) {
-		coef1 = (area->z - z) * ((area->upperleft - area->lowerleft) / area->depth);
-		coef2 = (area->z - z) * ((area->upperright - area->lowerright) / area->depth);
-		if(x > area->x + area->lowerleft + coef1
-		   && x < area->x + area->lowerright + coef2)
+	if(z < level->holes[hole][1] && z > level->holes[hole][1] - level->holes[hole][6]) {
+		coef1 =
+		    (level->holes[hole][1] -
+		     z) * ((level->holes[hole][2] - level->holes[hole][3]) / level->holes[hole][6]);
+		coef2 =
+		    (level->holes[hole][1] -
+		     z) * ((level->holes[hole][4] - level->holes[hole][5]) / level->holes[hole][6]);
+		if(x > level->holes[hole][0] + level->holes[hole][3] + coef1
+		   && x < level->holes[hole][0] + level->holes[hole][5] + coef2)
 			return 1;
 	}
 	return 0;
-}
-int testhole(int hole, float x, float z) {
-	return testhole_or_wall(&level->holes[hole], x, z);
-}
-
-int testwall(int wall, float x, float z) {
-	return testhole_or_wall((s_hole*) (&level->walls[wall]), x, z);
 }
 
 /// find all holes here and return the count
@@ -10187,7 +10365,26 @@ int checkhole(float x, float z) {
 	return 0;
 }
 
+/*
+Calculates the coef relative to the bottom left point. This is done by figuring out how far the entity is from
+the bottom of the platform and multiplying the result by the difference of the bottom left point and the top
+left point divided by depth of the platform. The same is done for the right side, and checks to see if they are
+within the bottom/top and the left/right area.
+*/
+int testwall(int wall, float x, float z) {
+	float coef1, coef2;
 
+//    if(wall >= level->numwalls || wall < 0) return 0;
+	if(z < level->walls[wall].z && z > level->walls[wall].z - level->walls[wall].depth) {
+		coef1 = (level->walls[wall].z - z) * ((level->walls[wall].upperleft - level->walls[wall].lowerleft) / level->walls[wall].depth);
+		coef2 = (level->walls[wall].z - z) * ((level->walls[wall].upperright - level->walls[wall].lowerright) / level->walls[wall].depth);
+		if(x > level->walls[wall].x + level->walls[wall].lowerleft + coef1
+		   && x < level->walls[wall].x + level->walls[wall].lowerright + coef2)
+			return 1;
+	}
+
+	return 0;
+}
 
 // find all walls here within altitude1 and 2, return the count
 int checkwalls(float x, float z, float a1, float a2) {
@@ -18386,8 +18583,8 @@ void draw_scrolled_bg() {
 	pscreenmethod->alpha = 0;
 
 	for(i = 0; i < level->numholes; i++)
-		spriteq_add_sprite((int) (level->holes[i].x - advancex),
-				   (int) (level->holes[i].z - level->holes[i].depth + 4 + gfx_y_offset), HOLE_Z,
+		spriteq_add_sprite((int) (level->holes[i][0] - advancex),
+				   (int) (level->holes[i][1] - level->holes[i][6] + 4 + gfx_y_offset), HOLE_Z,
 				   holesprite, pscreenmethod, 0);
 
 	if(frontpanels_loaded) {
@@ -18936,7 +19133,7 @@ void borShutdown(const char *caller, int status, char *msg, ...) {
 #ifdef DEBUG
 	assert(status == 0);	// this way we can haz backtrace.
 #endif
-
+    borExit(status);
 	exit(status);
 }
 
@@ -18951,8 +19148,7 @@ void startup() {
 
 	loadHighScoreFile();
 	clearSavedGame();
-
-
+ 
 	if(!init_videomodes())
 		shutdown(1, "Unable to set video mode: %d x %d!\n", videomodes.hRes, videomodes.vRes);
 

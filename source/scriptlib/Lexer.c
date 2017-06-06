@@ -12,7 +12,7 @@
 #include <string.h>
 
 //Constructor
-void Token_Init(Token * ptoken, MY_TOKEN_TYPE theType, const char* theSource, TEXTPOS theTextPosition, u32 charOffset) {
+void Token_Init(Token * ptoken, MY_TOKEN_TYPE theType, LPCSTR theSource, TEXTPOS theTextPosition, ULONG charOffset) {
 	ptoken->theType = theType;
 	ptoken->theTextPosition = theTextPosition;
 	ptoken->charOffset = charOffset;
@@ -20,7 +20,7 @@ void Token_Init(Token * ptoken, MY_TOKEN_TYPE theType, const char* theSource, TE
 }
 
 //Construct from a pp_token
-s32 Token_InitFromPreprocessor(Token * ptoken, pp_token * ppToken) {
+HRESULT Token_InitFromPreprocessor(Token * ptoken, pp_token * ppToken) {
 	ptoken->theTextPosition = ppToken->theTextPosition;
 	ptoken->charOffset = ppToken->charOffset;
 	strncpy(ptoken->theSource, ppToken->theSource, MAX_TOKEN_LENGTH);
@@ -359,7 +359,7 @@ s32 Token_InitFromPreprocessor(Token * ptoken, pp_token * ppToken) {
 	return S_OK;
 }
 
-void Lexer_Init(Lexer * plexer, pp_context * pcontext, const char* thePath, char* theSource, TEXTPOS theStartingPosition) {
+void Lexer_Init(Lexer * plexer, pp_context * pcontext, LPCSTR thePath, LPSTR theSource, TEXTPOS theStartingPosition) {
 	plexer->thePath = thePath;
 	plexer->ptheSource = theSource;
 	plexer->theTokenPosition = theStartingPosition;
@@ -379,7 +379,7 @@ void Lexer_Clear(Lexer * plexer) {
 *  Returns: S_OK
 *           E_FAIL
 ******************************************************************************/
-s32 Lexer_GetNextToken(Lexer * plexer, Token * theNextToken) {
+HRESULT Lexer_GetNextToken(Lexer * plexer, Token * theNextToken) {
 	pp_token *ppToken;
 
 	// get the next non-whitespace, non-newline token from the preprocessor

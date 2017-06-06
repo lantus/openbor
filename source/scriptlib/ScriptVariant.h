@@ -22,16 +22,16 @@ typedef enum VariantType {
 typedef struct ScriptVariant {
 	union			//value
 	{
-		s32 lVal;
-		void *ptrVal;
-		double dblVal;
+		LONG lVal;
+		VOID *ptrVal;
+		DOUBLE dblVal;
 		int strVal;
 	};
 	VARTYPE vt;		//variatn type
 } ScriptVariant;
 
 
-extern char **strcache;
+extern CHAR **strcache;
 extern int strcache_size;
 extern int *strcache_index;
 
@@ -41,17 +41,17 @@ void StrCache_Clear();
 //void StrCache_Init();
 void StrCache_Collect(int index);
 int StrCache_Pop();
-char *StrCache_Get(int index);
+CHAR *StrCache_Get(int index);
 void ScriptVariant_Clear(ScriptVariant * var);
 
 void ScriptVariant_Init(ScriptVariant * var);
 void ScriptVariant_Copy(ScriptVariant * svar, ScriptVariant * rightChild);	// faster in some situations
 void ScriptVariant_ChangeType(ScriptVariant * var, VARTYPE cvt);
 VARTYPE ScriptVariant_GetType(ScriptVariant * var);
-s32 ScriptVariant_IntegerValue(ScriptVariant * var, s32 * pVal);
-s32 ScriptVariant_DecimalValue(ScriptVariant * var, double * pVal);
-bool ScriptVariant_IsTrue(ScriptVariant * svar);
-void ScriptVariant_ToString(ScriptVariant * svar, char* buffer);
+HRESULT ScriptVariant_IntegerValue(ScriptVariant * var, LONG * pVal);
+HRESULT ScriptVariant_DecimalValue(ScriptVariant * var, DOUBLE * pVal);
+BOOL ScriptVariant_IsTrue(ScriptVariant * svar);
+void ScriptVariant_ToString(ScriptVariant * svar, LPSTR buffer);
 
 // light version, for compiled call, faster than above, but not safe in some situations
 // This function are used by compiled scripts

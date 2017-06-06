@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void Interpreter_Init(Interpreter * pinterpreter, const char* name, List * pflist) {
+void Interpreter_Init(Interpreter * pinterpreter, LPCSTR name, List * pflist) {
 	memset(pinterpreter, 0, sizeof(Interpreter));
 	StackedSymbolTable_Init(&(pinterpreter->theSymbolTable), name);
 	Parser_Init(&(pinterpreter->theParser));
@@ -64,14 +64,14 @@ void Interpreter_Clear(Interpreter * pinterpreter) {
 /******************************************************************************
 *  ParseText -- This method parses the text in scriptText into a string of
 *               byte-codes for the interpreter to execute.
-*  Parameters: scriptText -- an const char* containing the script to be parsed.
+*  Parameters: scriptText -- an LPCSTR containing the script to be parsed.
 *              startingLineNumber -- The line number the script starts on
 *                                    (For use in HTML-based scripts)
-*              dwSourceContext -- u32 which contains a host provided context
+*              dwSourceContext -- DWORD which contains a host provided context
 *                                 for the script being parsed.
 *  Returns: E_FAIL if parser errors found else S_OK
 ******************************************************************************/
-s32 Interpreter_ParseText(Interpreter * pinterpreter, char* scriptText, u32 startingLineNumber, const char* path) {
+HRESULT Interpreter_ParseText(Interpreter * pinterpreter, LPSTR scriptText, ULONG startingLineNumber, LPCSTR path) {
 
 	//Parse the script
 	Parser_ParseText(&(pinterpreter->theParser), &(pinterpreter->theContext),
@@ -86,7 +86,7 @@ s32 Interpreter_ParseText(Interpreter * pinterpreter, char* scriptText, u32 star
 /******************************************************************************
 *  PutValue -- This method copies the VARIANT in pValue into the symbol
 *  designated by variable.
-*  Parameters: variable -- a const char* which denotes which symbol to copy this
+*  Parameters: variable -- a LPCSTR which denotes which symbol to copy this
 *                          value into.
 *              pValue -- a pointer to a ScriptVariant which contains the value
 *                        to be copied into the symbol.
@@ -94,8 +94,8 @@ s32 Interpreter_ParseText(Interpreter * pinterpreter, char* scriptText, u32 star
 *           E_INVALIDARG
 *           E_FAIL
 ******************************************************************************/
-s32 Interpreter_PutValue(Interpreter * pinterpreter, const char* variable, ScriptVariant * pValue, int refFlag) {
-	s32 hr = E_FAIL;
+HRESULT Interpreter_PutValue(Interpreter * pinterpreter, LPCSTR variable, ScriptVariant * pValue, int refFlag) {
+	HRESULT hr = E_FAIL;
 	Instruction *pref = NULL;
 	Symbol *pSymbol = NULL;
 	//Check arguments
@@ -122,7 +122,7 @@ s32 Interpreter_PutValue(Interpreter * pinterpreter, const char* variable, Scrip
 /******************************************************************************
 *  GetValue -- This method copies the VARIANT in the symbol designated by
 *              variable into the ScriptVariant.
-*  Parameters: variable -- a const char* which denotes which symbol to copy this
+*  Parameters: variable -- a LPCSTR which denotes which symbol to copy this
 *                          value from.
 *              pValue -- a pointer to a ScriptVariant into which to copy the
 *                        value.
@@ -130,8 +130,8 @@ s32 Interpreter_PutValue(Interpreter * pinterpreter, const char* variable, Scrip
 *           E_INVALIDARG
 *           E_FAIL
 ******************************************************************************/
-s32 Interpreter_GetValue(Interpreter * pinterpreter, const char* variable, ScriptVariant * pValue) {
-	s32 hr = E_FAIL;
+HRESULT Interpreter_GetValue(Interpreter * pinterpreter, LPCSTR variable, ScriptVariant * pValue) {
+	HRESULT hr = E_FAIL;
 
 	//Get the CSymbol that contains the VARIANT we need
 	Symbol *pSymbol = NULL;
@@ -145,8 +145,8 @@ s32 Interpreter_GetValue(Interpreter * pinterpreter, const char* variable, Scrip
 	return hr;
 }
 
-s32 Interpreter_GetValueByRef(Interpreter * pinterpreter, const char* variable, ScriptVariant ** ppValue) {
-	s32 hr = E_FAIL;
+HRESULT Interpreter_GetValueByRef(Interpreter * pinterpreter, LPCSTR variable, ScriptVariant ** ppValue) {
+	HRESULT hr = E_FAIL;
 
 	//Get the CSymbol that contains the VARIANT we need
 	Symbol *pSymbol = NULL;
@@ -164,14 +164,14 @@ s32 Interpreter_GetValueByRef(Interpreter * pinterpreter, const char* variable, 
 *  Call -- This method calls the method designated by variable, assuming it
 *          exists in the script somewhere.  If there is a return value, it is
 *          placed into the pRetValue ScriptVariant.
-*  Parameters: method -- a const char* which denotes the method to call
+*  Parameters: method -- a LPCSTR which denotes the method to call
 *              pRetValue -- a pointer to a ScriptVariant which accepts the
 *                           return value, if any.
 *  Returns: S_OK
 *           E_FAIL
 ******************************************************************************/
-s32 Interpreter_Call(Interpreter * pinterpreter) {
-	s32 hr = E_FAIL;
+HRESULT Interpreter_Call(Interpreter * pinterpreter) {
+	HRESULT hr = E_FAIL;
 	Instruction **temp = pinterpreter->pCurrentCall;
 	Instruction **pCurrentCall = (Instruction **) (pinterpreter->pCurrentInstruction);
 	Instruction *currentCall;
@@ -223,9 +223,9 @@ s32 Interpreter_Call(Interpreter * pinterpreter) {
 *  Returns: S_OK
 *           E_FAIL
 ******************************************************************************/
-s32 Interpreter_EvaluateImmediate(Interpreter * pinterpreter) {
-	bool bImmediate = FALSE;
-	s32 hr = S_OK;
+HRESULT Interpreter_EvaluateImmediate(Interpreter * pinterpreter) {
+	BOOL bImmediate = FALSE;
+	HRESULT hr = S_OK;
 	Instruction *pInstruction = NULL;
 	int size, index;
 
@@ -278,8 +278,8 @@ s32 Interpreter_EvaluateImmediate(Interpreter * pinterpreter) {
 *  Returns: S_OK
 *           E_FAIL
 ******************************************************************************/
-s32 Interpreter_EvaluateCall(Interpreter * pinterpreter) {
-	s32 hr = S_OK;
+HRESULT Interpreter_EvaluateCall(Interpreter * pinterpreter) {
+	HRESULT hr = S_OK;
 	//Evaluate instructions until an error occurs or until the m_bCallCompleted
 	//flag is set to true.
 	while((SUCCEEDED(hr)) && (!pinterpreter->bCallCompleted)) {
@@ -334,17 +334,17 @@ s32 Interpreter_EvaluateCall(Interpreter * pinterpreter) {
 #define BINARYOP(x)  \
 	ScriptVariant_Copy(pInstruction->theVal, x(pInstruction->theRef, pInstruction->theRef2));
 
-s32 Interpreter_CompileInstructions(Interpreter * pinterpreter) {
+HRESULT Interpreter_CompileInstructions(Interpreter * pinterpreter) {
 	int i, j, size;
 	Instruction *pInstruction = NULL;
 	Token *pToken;
 	Symbol *pSymbol = NULL;
-	const char* pLabel = NULL;
+	LPCSTR pLabel = NULL;
 	ScriptVariant *pSVar1 = NULL;
 	ScriptVariant *pSVar2 = NULL;
 	ScriptVariant *pRetVal = NULL;
 	ImportNode *pImport = NULL;
-	s32 hr = S_OK;
+	HRESULT hr = S_OK;
 
 	// Import any scripts named in #import directives (parsed by the preprocessor)
 	size = pinterpreter->theContext.imports.size;
@@ -685,8 +685,8 @@ s32 Interpreter_CompileInstructions(Interpreter * pinterpreter) {
 *  Returns: S_OK
 *           E_FAIL
 ******************************************************************************/
-s32 Interpreter_EvalInstruction(Interpreter * pinterpreter) {
-	s32 hr = S_OK;
+HRESULT Interpreter_EvalInstruction(Interpreter * pinterpreter) {
+	HRESULT hr = S_OK;
 	Instruction *pInstruction = NULL;
 	Instruction *currentCall;
 	Instruction *returnEntry;
@@ -956,16 +956,16 @@ s32 Interpreter_EvalInstruction(Interpreter * pinterpreter) {
 *                 stored in this CInterpreter object.  The file cannot be read
 *                 back into the interpreter.  It is created for debugging
 *                 purposes only.
-*  Parameters: fileName -- an const char* containing the name of the file to
-*                          store the pseudo-assembly code in.  An const char* is
+*  Parameters: fileName -- an LPCSTR containing the name of the file to
+*                          store the pseudo-assembly code in.  An LPCSTR is
 *                          used for consistency with the rest of the engine.
 *  Returns: none
 ******************************************************************************/
-void Interpreter_OutputPCode(Interpreter * pinterpreter, const char* fileName) {
+void Interpreter_OutputPCode(Interpreter * pinterpreter, LPCSTR fileName) {
 	FILE *instStream = NULL;
 	Instruction *pInstruction = NULL;
-	const char* pLabel = NULL;
-	const char* pStr;
+	LPCSTR pLabel = NULL;
+	LPCSTR pStr;
 	int i, size;
 	//Declare and initialize some string buffers.
 	char *buffer = (char *) malloc(256);

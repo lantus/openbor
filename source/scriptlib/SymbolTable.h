@@ -13,8 +13,8 @@
 #include "List.h"
 
 typedef struct Symbol {
-	char name[MAX_STR_LEN + 1];
-	u32 dwFlags;
+	CHAR name[MAX_STR_LEN + 1];
+	DWORD dwFlags;
 	ScriptVariant var;
 	Instruction *theRef;
 } Symbol;
@@ -23,13 +23,13 @@ typedef struct Symbol {
 typedef struct SymbolTable {
 	List SymbolList;
 	int nextSymbolCount;
-	char name[MAX_STR_LEN + 1];
+	CHAR name[MAX_STR_LEN + 1];
 } SymbolTable;
 
-void Symbol_Init(Symbol * symbol, const char* theName, u32 flags, ScriptVariant * pvar, Instruction * theRef);
-void SymbolTable_Init(SymbolTable * stable, const char* theName);
+void Symbol_Init(Symbol * symbol, LPCSTR theName, DWORD flags, ScriptVariant * pvar, Instruction * theRef);
+void SymbolTable_Init(SymbolTable * stable, LPCSTR theName);
 void SymbolTable_Clear(SymbolTable * stable);
-bool SymbolTable_FindSymbol(SymbolTable * stable, const char* symbolName, Symbol ** pp_theSymbol);
+BOOL SymbolTable_FindSymbol(SymbolTable * stable, LPCSTR symbolName, Symbol ** pp_theSymbol);
 void SymbolTable_AddSymbol(SymbolTable * stable, Symbol * p_theSymbol);
 
 #endif

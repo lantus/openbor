@@ -53,7 +53,7 @@ char *readscript(const char *path) {
 	return NULL;
 }
 
-s32 ImportNode_Init(ImportNode * node, const char *path) {
+HRESULT ImportNode_Init(ImportNode * node, const char *path) {
 	char *scriptText;
 	node->numRefs = 0;
 
@@ -69,7 +69,7 @@ s32 ImportNode_Init(ImportNode * node, const char *path) {
 	return S_OK;
 
 	error:
-	printf("Script error: unable to import script file '%s'\n", path);
+	printf("Script error: unable to import script file '%s'\n");
 	return E_FAIL;
 }
 
