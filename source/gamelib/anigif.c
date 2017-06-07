@@ -322,14 +322,14 @@ int anigif_open(char *filename, char *packfilename, unsigned char *pal) {
 	int i, j;
 	anigif_close();
 
-#if PSP || PS2 || DC
+#if PSP || PS2 || DC 
 	if((handle = openreadaheadpackfile(filename, packfilename, 1 * 1024 * 1024, 131072)) == -1)
 		return 0;
 #else
 	if((handle = openpackfile(filename, packfilename)) == -1)
 		return 0;
 #endif
-
+   
 #if PSP || PS2 || DC || AMIGA
 	if(readpackfile(handle, &gif_header, sizeof_gifheaderstruct) != sizeof_gifheaderstruct) {
 #else
@@ -459,6 +459,7 @@ int anigif_decode(s_screen * screen, int *delay, int x, int y) {
 //                      return ANIGIF_DECODE_END;
 	}
 
+ 
 	anigif_close();
 	return ANIGIF_DECODE_END;
 }

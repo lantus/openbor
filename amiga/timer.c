@@ -23,7 +23,7 @@ unsigned timer_gettick() {
 
 unsigned timer_getinterval(unsigned freq) {
 	unsigned tickspassed, ebx, blocksize, now;
-	now = getMilliseconds();
+	now = timer_gettick();
 	ebx = now - lastinterval;
 	blocksize = GETTIME_FREQ / freq;
 	ebx += GETTIME_FREQ % freq;

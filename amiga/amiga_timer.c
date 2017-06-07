@@ -83,12 +83,12 @@ void waitVBL(int count)
 {
     sleep((count * 1000) / 70);
 }
-
+ 
 
 void initTimer(void)
 {
     // initialize timer
 
    opentimer(UNIT_VBLANK);
-   startup();
+   timerStartup();
 }

@@ -191,6 +191,7 @@ void vga_vwait(void) {
 
 int video_copy_screen(s_screen * src) {
 
+    filecache_process();
 
     c2p1x1_8_c5_bm_040(320,240,0,0,src->data,_hardwareScreenBuffer[_currentScreenBuffer]->sb_BitMap);
     ChangeScreenBuffer(_hardwareScreen, _hardwareScreenBuffer[_currentScreenBuffer]); 
@@ -215,18 +216,19 @@ void video_stretch(int enable) {
 
 
 void vga_setpalette(unsigned char *palette) {
-    int i;   
-    int j = 1;
-    
+    int i; 
+    int j = 1;  
+     
     if(bpp>1) return;
-    
+
     for (i=0; i<256; ++i) 
     {
-        colorsAGA[j]   = palette[0];
-        colorsAGA[j+1] = palette[1];
-        colorsAGA[j+2] = palette[2];
+        colorsAGA[j]   = palette[0] << 24;
+        colorsAGA[j+1] = palette[1] << 24;
+        colorsAGA[j+2] = palette[2] << 24;
         
         palette+=3;
+        j+=3;
     } 
     
     colorsAGA[0]=((256)<<16) ;

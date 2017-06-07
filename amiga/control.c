@@ -34,7 +34,7 @@ enabling and disabling all joysticks.
 */
 int control_usejoy(int enable) {
 	 
-	return 0;
+	return 1;
 }
 
 
@@ -43,7 +43,7 @@ Only used in openbor.c to get current status
 of joystick usage.
 */
 int control_getjoyenabled() {
-	return 0;
+	return 1;
 }
 
 
@@ -71,7 +71,7 @@ void control_update(s_playercontrols ** playercontrols, int numplayers) {
 
 char *control_getkeyname(unsigned int keycode) {
  
-    return "";
+    return "...";
 }
 
 

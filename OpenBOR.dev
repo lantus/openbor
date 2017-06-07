@@ -40,7 +40,7 @@ MakeIncludes=
 Compiler=-fsigned-char  -m68020-60 -fomit-frame-pointer -msoft-float_@@_
 CppCompiler=
 Linker=-noixemul_@@_-ldebug_@@_-lvorbisfile _@@_-lvorbis _@@_-logg_@@_-lpng_@@_-lz_@@_-lm_@@_amiga\c2p1x1_8_c5_bm_040.o_@@_
-PreprocDefines=BOR_BIG_ENDIAN_@@_AMIGA_@@_SKIP_CODE_@@___M68020___@@_
+PreprocDefines=BOR_BIG_ENDIAN_@@_AMIGA_@@_SKIP_CODE_@@___M68020___@@_DEBUG_@@_
 CompilerSettings=0000000001010000000100
 Icon=
 ExeOutput=Release
@@ -763,7 +763,7 @@ Compile=1
 Link=1
 Priority=1000
 OverrideBuildCmd=0
-BuildCmd=	$(CC) -c video.c -o obj/video.o $(CFLAGS)
+BuildCmd=$(CC) -c video.c -o obj/video.o $(CFLAGS)
 
 [Unit72]
 FileName=amiga\timer.c
@@ -773,7 +773,7 @@ Compile=1
 Link=1
 Priority=1000
 OverrideBuildCmd=0
-BuildCmd=	$(CC) -c timer.c -o obj/timer.o $(CFLAGS)
+BuildCmd=$(CC) -c timer.c -o obj/timer.o $(CFLAGS)
 
 [Unit73]
 FileName=amiga\control.c
@@ -783,7 +783,7 @@ Compile=1
 Link=1
 Priority=1000
 OverrideBuildCmd=0
-BuildCmd=	$(CC) -c control.c -o obj/control.o $(CFLAGS)
+BuildCmd=$(CC) -c control.c -o obj/control.o $(CFLAGS)
 
 [Unit74]
 FileName=amiga\sblaster.c
@@ -793,7 +793,7 @@ Compile=1
 Link=1
 Priority=1000
 OverrideBuildCmd=0
-BuildCmd=	$(CC) -c sblaster.c -o obj/sblaster.o $(CFLAGS)
+BuildCmd=$(CC) -c sblaster.c -o obj/sblaster.o $(CFLAGS)
 
 [Unit75]
 FileName=amiga\amiga_timer.c
@@ -803,5 +803,5 @@ Compile=1
 Link=1
 Priority=1000
 OverrideBuildCmd=0
-BuildCmd=	$(CC) -c amiga_timer.c -o obj/amiga_timer.o $(CFLAGS)
+BuildCmd=$(CC) -c amiga_timer.c -o obj/amiga_timer.o $(CFLAGS)
 
