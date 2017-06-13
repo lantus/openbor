@@ -16,13 +16,20 @@
 extern struct ExecBase *SysBase;
 
 int cpu_type;
-char packfile[128] = { "PAKS/bor.pak" };
+char packfile[128] = { "PAKS/bor/" };
 char savesDir[128] = { "Saves" };
 char logsDir[128] = { "Logs" };
 char screenShotsDir[128] = { "ScreenShots" };
 
 void borExit(int reset) {
     exit(0);    
+}
+
+extern  int kprintf (char *fmt, ... );
+
+int kprintf (char *fmt, ... )
+{
+    return 0;
 }
 
 extern double rint(double x);

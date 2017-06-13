@@ -972,226 +972,7 @@ int sound_query_adpcm(char *artist, char *title) {
 	return 1;
 }
 
-/////////////////////////// Ogg Vorbis decoding ///////////////////////////////
-// Plombo's Ogg Vorbis decoder for OpenBOR. Uses libvorbisfile or libvorbisidec.
-
-#if TREMOR || DC
-#define ov_decode(vf,buffer,length,bitstream) ov_read(vf,buffer,length,bitstream)
-#else
-#define ov_decode(vf,buffer,length,bitstream) ov_read(vf,buffer,length,0,2,1,bitstream)
-#endif
-
-OggVorbis_File *oggfile;
-vorbis_info *stream_info;
-int current_section, ogg_handle;
-
-// I/O functions used by libvorbisfile
-size_t readpackfile_callback(void *buf, size_t len, size_t nmembers, int *handle) {
-	return readpackfile(*handle, buf, (int) (len * nmembers));
-}
-int closepackfile_callback(void *ptr) {
-	PDEBUG("closepack cb %d\n", *(int *) ptr);
-
-	return closepackfile(*(int *) ptr);
-}
-int seekpackfile_callback(int *handle, ogg_int64_t offset, int whence) {
-	return seekpackfile(*handle, (int) offset, whence);
-}
-int tellpackfile_callback(int *handle) {
-	return seekpackfile(*handle, 0, SEEK_CUR);
-}
-
-void sound_close_ogg() {
-	ov_clear(oggfile);
-	oggfile = NULL;
-	music_type = -1;
-}
-
-int sound_open_ogg(char *filename, char *packname, int volume, int loop, u32 music_offset) {
-
-	int i;
-
-	static ov_callbacks ogg_callbacks = {
-		(size_t(*)(void *, size_t, size_t, void *)) readpackfile_callback,
-		(int (*)(void *, ogg_int64_t, int)) seekpackfile_callback,
-		(int (*)(void *)) closepackfile_callback,
-		(long (*)(void *)) tellpackfile_callback
-	};
-
-	if(!mixing_inited)
-		return 0;
-	if(!mixing_active)
-		return 0;
-
-	sound_close_music();
-
-	PDEBUG("trying to open OGG file %s from %s, vol %d, loop %d, ofs %u\n", filename, packname, volume, loop,
-	       music_offset);
-	// Open file, etcetera
-	ogg_handle = openpackfile(filename, packname);
-	PDEBUG("ogg handle %d\n", ogg_handle);
-	if(ogg_handle < 0) {
-		PDEBUG("couldn't get handle\n");
-		return 0;
-	}
-	oggfile = malloc(sizeof(OggVorbis_File));
-	if(ov_open_callbacks(&ogg_handle, oggfile, NULL, 0, ogg_callbacks) != 0) {
-		PDEBUG("ov_open_callbacks failed\n");
-		goto error_exit;
-	}
-	// Can I play it?
-	stream_info = ov_info(oggfile, -1);
-	if((stream_info->channels != 1 && stream_info->channels != 2) ||
-	   stream_info->rate < 11025 || stream_info->rate > 44100) {
-		sound_close_ogg();
-		PDEBUG("NOT can i play it\n");
-
-		goto error_exit;
-	}
-
-	memset(&musicchannel, 0, sizeof(musicchannelstruct));
-
-	musicchannel.fp_period = INT_TO_FIX(stream_info->rate) / playfrequency;
-	musicchannel.volume[0] = volume;
-	musicchannel.volume[1] = volume;
-	musicchannel.channels = stream_info->channels;
-	music_looping = loop;
-	music_atend = 0;
-
-	for(i = 0; i < MUSIC_NUM_BUFFERS; i++) {
-		musicchannel.buf[i] = malloc(MUSIC_BUF_SIZE * sizeof(short));
-		if(musicchannel.buf[i] == NULL) {
-			sound_close_ogg();
-			PDEBUG("buf is null\n");
-			goto error_exit;
-		}
-		memset(musicchannel.buf[i], 0, MUSIC_BUF_SIZE * sizeof(short));
-	}
-
-	loop_offset = music_offset;
-	music_type = 1;
-
-	return 1;
-
-	error_exit:
-	closepackfile(ogg_handle);
-	return 0;
-
-}
-
-void sound_update_ogg() {
-
-	int samples, readsamples, samples_to_read;
-	short *outptr;
-	int i, j;
-
-	if(!mixing_inited || !mixing_active) {
-		sound_close_music();
-		return;
-	}
-	if(musicchannel.paused)
-		return;
-
-	// Just to be sure: check if all goes well...
-	for(i = 0; i < MUSIC_NUM_BUFFERS; i++) {
-		if(musicchannel.fp_playto[i] > INT_TO_FIX(MUSIC_BUF_SIZE)) {
-			musicchannel.fp_playto[i] = 0;
-			return;
-		}
-	}
-
-
-	// Need to update?
-	for(j = 0, i = musicchannel.playing_buffer + 1; j < MUSIC_NUM_BUFFERS; j++, i++) {
-		i %= MUSIC_NUM_BUFFERS;
-
-		if(musicchannel.fp_playto[i] == 0) {
-			// Buffer needs to be filled
-
-			samples = 0;
-			outptr = musicchannel.buf[i];
-
-			if(!music_looping) {
-				if(music_atend) {
-					// Close file when done playing all buffers
-					if(!musicchannel.active) {
-						sound_close_music();
-						return;
-					}
-				} else
-					while(samples < MUSIC_BUF_SIZE) {
-						readsamples =
-						    ov_decode(oggfile, (char *) outptr, 2 * (MUSIC_BUF_SIZE - samples),
-							      &current_section) / 2;
-						if(readsamples == 0) {
-							music_atend = 1;
-							return;
-						} else if(readsamples < 0) {
-							sound_close_music();
-							return;
-						}
-						outptr += readsamples;
-						samples += readsamples;
-					}
-			} else
-				while(samples < MUSIC_BUF_SIZE) {
-					samples_to_read = MUSIC_BUF_SIZE - samples;
-					readsamples =
-					    ov_decode(oggfile, (char *) outptr, 2 * samples_to_read,
-						      &current_section) / 2;
-					if(readsamples < 0) {
-						// Error
-						sound_close_music();
-						return;
-					} else if(readsamples > 0) {
-						outptr += readsamples;
-						samples += readsamples;
-					} else if(readsamples < samples_to_read) {
-						// At start of data already?
-						if(ov_pcm_tell(oggfile) == 0) {
-							// Must be some error
-							sound_close_music();
-							return;
-						}
-						// Seek to beginning of data
-						if(ov_pcm_seek(oggfile, loop_offset * 2) != 0) {
-							sound_close_music();
-							return;
-						}
-					}
-				}
-			// Activate
-			musicchannel.fp_playto[i] = INT_TO_FIX(samples);
-			if(!musicchannel.active) {
-				musicchannel.playing_buffer = i;
-				musicchannel.active = 1;
-			}
-		}
-	}
-}
-
-void sound_ogg_tempo(int music_tempo) {
-	musicchannel.fp_period = (INT_TO_FIX(1) * music_tempo / 100) * stream_info->rate / playfrequency;
-}
-
-int sound_query_ogg(char *artist, char *title) {
-	int i;
-	char *current;
-	vorbis_comment *comment = ov_comment(oggfile, -1);
-
-	if(!artist || !title)
-		return 1;
-
-	for(i = 0; i < comment->comments; i++) {
-		current = comment->user_comments[i];
-		if(strncmp("ARTIST=", current, 7) == 0)
-			strcpy(artist, current + 7);
-		else if(strncmp("TITLE=", current, 6) == 0)
-			strcpy(title, current + 6);
-	}
-
-	return 1;
-}
+ 
 
 /////////////////////////////// INIT / EXIT //////////////////////////////////
 
@@ -1202,64 +983,36 @@ int sound_open_music(char *filename, char *packname, int volume, int loop, u32 m
 	// try opening filename exactly as specified
 	if(sound_open_adpcm(filename, packname, volume, loop, music_offset))
 		return 1;
-	if(sound_open_ogg(filename, packname, volume, loop, music_offset))
-		return 1;
-
+ 
 	// handle adding an extension to the filename
 	sprintf(fnam, "%s.bor", filename);
 	if(sound_open_adpcm(fnam, packname, volume, loop, music_offset))
 		return 1;
-	sprintf(fnam, "%s.ogg", filename);
-	if(sound_open_ogg(fnam, packname, volume, loop, music_offset))
-		return 1;
-	sprintf(fnam, "%s.oga", filename);
-	if(sound_open_ogg(fnam, packname, volume, loop, music_offset))
-		return 1;
+ 
 
 	return 0;
 }
 
 void sound_close_music() {
-	switch (music_type) {
-		case 0:
-			sound_close_adpcm();
-			break;
-		case 1:
-			sound_close_ogg();
-	}
+    sound_close_adpcm();
 	music_type = -1;
 }
 
 void sound_update_music() {
-	switch (music_type) {
-		case 0:
-			sound_update_adpcm();
-			break;
-		case 1:
-			sound_update_ogg();
-	}
+    sound_update_adpcm();
 }
 
 int sound_query_music(char *artist, char *title) {
 	switch (music_type) {
 		case 0:
-			return sound_query_adpcm(artist, title);
-		case 1:
-			return sound_query_ogg(artist, title);
+			return sound_query_adpcm(artist, title);	 
 		default:
 			return 0;
 	}
 }
 
 void sound_music_tempo(int music_tempo) {
-
-	switch (music_type) {
-		case 0:
-			sound_adpcm_tempo(music_tempo);
-			break;
-		case 1:
-			sound_ogg_tempo(music_tempo);
-	}
+    sound_adpcm_tempo(music_tempo);
 }
 
 void sound_volume_music(int left, int right) {

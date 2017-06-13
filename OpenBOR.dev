@@ -37,10 +37,10 @@ Includes=.;source;source/adpcmlib;source/gamelib;source/preprocessorlib;source/r
 Libs=
 ResourceIncludes=
 MakeIncludes=
-Compiler=-fsigned-char  -m68020-60 -fomit-frame-pointer -msoft-float_@@_
+Compiler=-fsigned-char  -m68060 -fomit-frame-pointer_@@_
 CppCompiler=
-Linker=-noixemul_@@_-ldebug_@@_-lvorbisfile _@@_-lvorbis _@@_-logg_@@_-lpng_@@_-lz_@@_-lm_@@_amiga\c2p1x1_8_c5_bm_040.o_@@_
-PreprocDefines=BOR_BIG_ENDIAN_@@_AMIGA_@@_SKIP_CODE_@@___M68020___@@_DEBUG_@@_
+Linker=-noixemul_@@_-lpng_@@_-lz_@@_-lm_@@_amiga\c2p1x1_8_c5_bm_040.o_@@_amiga\m_mmu.o_@@__@@_
+PreprocDefines=BOR_BIG_ENDIAN_@@_AMIGA_@@_SKIP_CODE_@@___M68020___@@_
 CompilerSettings=0000000001010000000100
 Icon=
 ExeOutput=Release
@@ -663,7 +663,7 @@ Compile=0
 Link=0
 Priority=1000
 OverrideBuildCmd=0
-BuildCmd=
+BuildCmd=	$(CC) -c sblaster.c -o obj/sblaster.o $(CFLAGS)
 
 [Unit64]
 FileName=sdl\timer.c
@@ -793,7 +793,7 @@ Compile=1
 Link=1
 Priority=1000
 OverrideBuildCmd=0
-BuildCmd=$(CC) -c sblaster.c -o obj/sblaster.o $(CFLAGS)
+BuildCmd=	$(CC) -c sblaster.c -o obj/sblaster.o $(CFLAGS)
 
 [Unit75]
 FileName=amiga\amiga_timer.c

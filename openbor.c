@@ -18948,7 +18948,12 @@ void apply_controls() {
 	int p;
 
 	for(p = 0; p < 4; p++) {
+
+#ifndef AMIGA        
 		control_setkey(playercontrolpointers[p], FLAG_ESC, CONTROL_ESC);
+#else
+        control_setkey(playercontrolpointers[p], FLAG_ESC, savedata.keys[p][SDID_SCREENSHOT]);		
+#endif		
 		control_setkey(playercontrolpointers[p], FLAG_MOVEUP, savedata.keys[p][SDID_MOVEUP]);
 		control_setkey(playercontrolpointers[p], FLAG_MOVEDOWN, savedata.keys[p][SDID_MOVEDOWN]);
 		control_setkey(playercontrolpointers[p], FLAG_MOVELEFT, savedata.keys[p][SDID_MOVELEFT]);

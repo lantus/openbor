@@ -46,9 +46,31 @@ REG(d3, UWORD offset_y),
 REG(a0, UBYTE *chunky_buffer),
 REG(a1, struct BitMap *bitmap));
 
+/*
+ * cachemodes
+ */
+
+#define CM_IMPRECISE ((1<<6)|(1<<5))
+#define CM_PRECISE   (1<<6)
+#define CM_COPYBACK  (1<<5)
+#define CM_WRITETHROUGH 0
+#define CM_MASK      ((1<<6)|(1<<5))
+
+
+/*
+ * functions
+ */
+
+extern UBYTE REGARGS mmu_mark (REG(a0, void *start),
+                               REG(d0, ULONG length),
+                               REG(d1, ULONG cm),
+                               REG(a6, struct ExecBase *SysBase));
+
+
 extern int cpu_type;
 extern void mmu_stuff2(void);
 extern void mmu_stuff2_cleanup(void);
+extern s_screen *vscreen;
 
 int mmu_chunky = 0;
 int mmu_active = 0;
@@ -93,6 +115,7 @@ static UWORD emptypointer[] = {
 
 int video_set_mode(s_videomodes videomodes) {
  
+    unsigned char *pix;
     char titlebuffer[256];
     static int    firsttime=1;
     uint i = 0;
@@ -122,8 +145,9 @@ int video_set_mode(s_videomodes videomodes) {
                 	        TAG_END);
                                   
         firsttime = 0;
-       
-       
+
+
+
         _hardwareScreen = OpenScreenTags(NULL,
                          SA_Depth, 8,
                          SA_DisplayID, modeId,
@@ -168,7 +192,10 @@ int video_set_mode(s_videomodes videomodes) {
 
         SetPointer (_hardwareWindow, emptypointer, 1, 16, 0, 0);
  
-         
+//        pix = vscreen->data;
+//       if (vscreen)
+//            mmu_chunky = mmu_mark(pix,((vscreen->width * vscreen->height) + 4095) & (~0xFFF),CM_WRITETHROUGH,SysBase);
+//    	mmu_active = 1;         
   
        
     }
