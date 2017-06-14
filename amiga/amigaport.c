@@ -11,9 +11,11 @@
 #include "video.h"
 #include "menu.h"
 
+#define PLOG(fmt, args...) do {   fprintf(stdout, fmt, ## args); } while (0)
 #define appExit exit
 #undef exit
 extern struct ExecBase *SysBase;
+
 
 int cpu_type;
 char packfile[128] = { "PAKS/bor/" };
@@ -57,12 +59,30 @@ int main(int argc, char *argv[]) {
     else
         cpu_type = 68000;
  
+    if (cpu_type < 68040)
+    {
+        PLOG("\nYou need a 68040 or higher to run this engine\n\n");
+        return 0;
+    }
 	packfile_mode(0);
 
 	dirExists(paksDir, 1);
 	dirExists(savesDir, 1);
 	dirExists(logsDir, 1);
 	dirExists(screenShotsDir, 1);
+	
+    if(argc > 1) {
+        
+        strcpy(packfile, argv[1]);
+           
+        if (is_dir(argv[1]))
+        {
+         
+            if (packfile[strlen(packfile) - 1] != '/')
+                strcat(packfile , "/");
+             
+        }        	   
+    }
 
 	openborMain(argc, argv);
 	borExit(0);

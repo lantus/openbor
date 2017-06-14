@@ -113,6 +113,32 @@ static UWORD emptypointer[] = {
   0x0000, 0x0000    /* reserved, must be NULL */
 };
 
+
+void video_end(void) {
+    
+  if (_hardwareWindow) {
+        ClearPointer(_hardwareWindow);
+        CloseWindow(_hardwareWindow);
+        _hardwareWindow = NULL;
+    }
+ 
+    if (_hardwareScreenBuffer[0]) { 
+        WaitBlit();
+        FreeScreenBuffer(_hardwareScreen, _hardwareScreenBuffer[0]);
+    }
+
+    if (_hardwareScreenBuffer[1]) { 
+        WaitBlit();
+        FreeScreenBuffer(_hardwareScreen, _hardwareScreenBuffer[1]);
+    }
+
+    if (_hardwareScreen) { 
+        CloseScreen(_hardwareScreen);
+        _hardwareScreen = NULL;
+    }    	 
+    
+}
+
 int video_set_mode(s_videomodes videomodes) {
  
     unsigned char *pix;
@@ -131,10 +157,15 @@ int video_set_mode(s_videomodes videomodes) {
 	width = videomodes.hRes;
 	height = videomodes.vRes;
 	if(videomodes.hRes==480) mode = 1;    
+	if(videomodes.hRes==0 && videomodes.vRes == 0)
+    {
+        video_end();    
+        return 0;
+    }
 
     if (firsttime)
     {
-      
+         
         vidMode = VideoModeAGA;
         modeId = BestModeID(BIDTAG_NominalWidth, 320,
                             BIDTAG_NominalHeight, 256,

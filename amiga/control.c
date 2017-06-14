@@ -120,6 +120,7 @@ int control_scankey() {
 
 
 #define KEY_RETURN (0x44)
+#define KEY_F10    (0x59)
  
 unsigned long getKey()
 {
@@ -141,7 +142,10 @@ unsigned long getKey()
     			switch(Code & 0x7f)
     			{    
     				case KEY_RETURN:		ret =  0x4000;
-    				    break;    			     				 
+    				    break;  
+                    case KEY_F10:
+                        quit_game = 1;
+                        break;      			     				 
     			}
     		} else
     		{
@@ -217,6 +221,9 @@ void control_update(s_playercontrols ** playercontrols, int numplayers) {
     unsigned padbits = getPad();
     unsigned keybits = getKey();
     int i;
+    
+    if (quit_game)
+        return;
 
     for (i = 1; i < 9; i ++)
     {    
