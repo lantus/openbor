@@ -80,23 +80,40 @@ int init_sound() {
 
 void exit_sound() {
 
+    if (g_soundThread) {
+        Signal(g_soundThread, SIGBREAKF_CTRL_C);
+    	Delay(10);
+        g_soundThread = NULL;
+    }
+
 	if (ahiReq[1]) {
 		FreeVec(ahiReq[1]);
+		ahiReq[1] = NULL;
     }
 
 	if (ahiReq[0]) {
 		CloseDevice((struct IORequest *) ahiReq[0]);
 		DeleteIORequest(ahiReq[0]);
+		ahiReq[0] = NULL;
 	}
 
 	if (soundBuffer[0])
+	{
 		FreeVec((APTR) soundBuffer[0]);
+		soundBuffer[0] = NULL;
+    }
 
 	if (soundBuffer[1])
+	{
 		FreeVec((APTR) soundBuffer[1]);
+		soundBuffer[1] = NULL;
+    }
 
 	if (ahiPort)
+	{
 		DeleteMsgPort(ahiPort);
+		ahiPort = NULL;
+    }
 }
 
 int sound_thread(STRPTR args, ULONG length) {

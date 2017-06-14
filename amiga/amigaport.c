@@ -16,7 +16,7 @@
 #undef exit
 extern struct ExecBase *SysBase;
 
-
+int isRTG;
 int cpu_type;
 char packfile[128] = { "PAKS/bor/" };
 char savesDir[128] = { "Saves" };
@@ -24,6 +24,7 @@ char logsDir[128] = { "Logs" };
 char screenShotsDir[128] = { "ScreenShots" };
 
 void borExit(int reset) {
+    video_end();    
     exit(0);    
 }
 
@@ -43,6 +44,7 @@ double rint(double x)
 
 int main(int argc, char *argv[]) {
  
+    isRTG = 0;      // Default to AGA
 
     // find out what type of CPU we have
 
@@ -81,7 +83,16 @@ int main(int argc, char *argv[]) {
             if (packfile[strlen(packfile) - 1] != '/')
                 strcat(packfile , "/");
              
-        }        	   
+        }  
+        
+        if (argc > 2)
+        {
+            if (strcmp(strlwr(argv[2]), "-cgx") == 0)
+            {
+                PLOG("OpenBOR : RTG screenmode specified\n");
+                isRTG = 1;    
+            }
+        }      	   
     }
 
 	openborMain(argc, argv);

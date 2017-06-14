@@ -55,7 +55,12 @@ Reset All data back to Zero and
 destroy all SDL Joystick data.
 */
 void control_exit() {
- 
+
+    if (LowLevelBase)
+    {
+        CloseLibrary(LowLevelBase);
+        LowLevelBase = NULL;
+    }
 }
 
 

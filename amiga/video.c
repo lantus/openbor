@@ -38,6 +38,8 @@
 #define CHIP
 #define INLINE __inline__
 
+#define PLOG(fmt, args...) do {   fprintf(stdout, fmt, ## args); } while (0)
+
 extern void REGARGS c2p1x1_8_c5_bm_040(
 REG(d0, UWORD chunky_x),
 REG(d1, UWORD chunky_y),
@@ -67,6 +69,7 @@ extern UBYTE REGARGS mmu_mark (REG(a0, void *start),
                                REG(a6, struct ExecBase *SysBase));
 
 
+extern int isRTG;
 extern int cpu_type;
 extern void mmu_stuff2(void);
 extern void mmu_stuff2_cleanup(void);
@@ -135,8 +138,122 @@ void video_end(void) {
     if (_hardwareScreen) { 
         CloseScreen(_hardwareScreen);
         _hardwareScreen = NULL;
-    }    	 
+    }    	
     
+    if (CyberGfxBase)
+    {
+        CloseLibrary(CyberGfxBase);
+        CyberGfxBase = NULL;
+    }
+    
+}
+
+void start_rtg()
+{
+    ULONG modeId = INVALID_ID;
+
+    if(!CyberGfxBase) CyberGfxBase = (struct Library *) OpenLibrary((UBYTE *)"cybergraphics.library",41L);
+ 
+    
+    modeId = BestCModeIDTags(CYBRBIDTG_NominalWidth, 320,
+				      CYBRBIDTG_NominalHeight, 240,
+				      CYBRBIDTG_Depth,8,
+				      TAG_DONE );    
+				      
+				      
+    _hardwareScreen = OpenScreenTags(NULL,
+                        SA_Depth, 8,
+                        SA_DisplayID, modeId,
+                        SA_Width, 320,
+                        SA_Height,240,
+                        SA_Type, CUSTOMSCREEN,
+                        SA_Overscan, OSCAN_TEXT,
+                        SA_Quiet,TRUE,
+                        SA_ShowTitle, FALSE,
+                        SA_Draggable, FALSE,
+                        SA_Exclusive, TRUE,
+                        SA_AutoScroll, FALSE,                     
+                        TAG_END);
+    
+    
+    _hardwareWindow = OpenWindowTags(NULL,
+                  	    WA_Left, 0,
+            			WA_Top, 0,
+            			WA_Width, 320,
+            			WA_Height, 240,
+            			WA_Title, NULL,
+    					SA_AutoScroll, FALSE,
+            			WA_CustomScreen, (ULONG)_hardwareScreen,
+            			WA_Backdrop, TRUE,
+            			WA_Borderless, TRUE,
+            			WA_DragBar, FALSE,
+            			WA_Activate, TRUE,
+            			WA_SimpleRefresh, TRUE,
+            			WA_NoCareRefresh, TRUE, 
+                        WA_IDCMP,           IDCMP_RAWKEY|IDCMP_MOUSEBUTTONS|IDCMP_MOUSEMOVE,   
+                  	    TAG_END);
+    
+ 
+    SetPointer (_hardwareWindow, emptypointer, 0, 0, 0, 0);				      
+    
+}
+
+void start_aga()
+{
+    ULONG modeId = INVALID_ID;
+    
+    modeId = BestModeID(BIDTAG_NominalWidth, 320,
+                        BIDTAG_NominalHeight, 256,
+            	        BIDTAG_DesiredWidth, 320,
+            	        BIDTAG_DesiredHeight, 256,
+            	        BIDTAG_Depth, 8,
+            	        BIDTAG_MonitorID, PAL_MONITOR_ID,
+            	        TAG_END);
+    
+    
+    _hardwareScreen = OpenScreenTags(NULL,
+                     SA_Depth, 8,
+                     SA_DisplayID, modeId,
+                     SA_Width, 320,
+                     SA_Height,256,
+                     SA_Type, CUSTOMSCREEN,
+                     SA_Overscan, OSCAN_TEXT,
+                     SA_Quiet,TRUE,
+                     SA_ShowTitle, FALSE,
+                     SA_Draggable, FALSE,
+                     SA_Exclusive, TRUE,
+                     SA_AutoScroll, FALSE,
+                     TAG_END);
+    
+    
+    // Create the hardware screen.
+    
+    
+    _hardwareScreenBuffer[0] = AllocScreenBuffer(_hardwareScreen, NULL, SB_SCREEN_BITMAP);
+    _hardwareScreenBuffer[1] = AllocScreenBuffer(_hardwareScreen, NULL, 0);
+    
+    _currentScreenBuffer = 1;
+    
+    _hardwareWindow = OpenWindowTags(NULL,
+                  	    WA_Left, 0,
+            			WA_Top, 0,
+            			WA_Width, 320,
+            			WA_Height, 256,
+            			WA_Title, NULL,
+    					SA_AutoScroll, FALSE,
+            			WA_CustomScreen, (ULONG)_hardwareScreen,
+            			WA_Backdrop, TRUE,
+            			WA_Borderless, TRUE,
+            			WA_DragBar, FALSE,
+            			WA_Activate, TRUE,
+            			WA_SimpleRefresh, TRUE,
+            			WA_NoCareRefresh, TRUE,
+            			WA_ReportMouse, TRUE,
+            			WA_RMBTrap, TRUE,
+                  	    WA_IDCMP,  IDCMP_RAWKEY | IDCMP_MOUSEMOVE | IDCMP_DELTAMOVE | IDCMP_MOUSEBUTTONS,
+                  	    TAG_END);
+    
+    SetPointer (_hardwareWindow, emptypointer, 1, 16, 0, 0);
 }
 
 int video_set_mode(s_videomodes videomodes) {
@@ -145,7 +262,14 @@ int video_set_mode(s_videomodes videomodes) {
     char titlebuffer[256];
     static int    firsttime=1;
     uint i = 0;
-    ULONG modeId = INVALID_ID;
+
+    
+    if(videomodes.hRes==0 && videomodes.vRes == 0)
+    {
+        PLOG("\nTerminating Video\n");
+        video_end();
+        return 0;
+    }    
   
     _hardwareWindow = NULL;
     _hardwareScreenBuffer[0] = NULL;
@@ -157,77 +281,22 @@ int video_set_mode(s_videomodes videomodes) {
 	width = videomodes.hRes;
 	height = videomodes.vRes;
 	if(videomodes.hRes==480) mode = 1;    
-	if(videomodes.hRes==0 && videomodes.vRes == 0)
-    {
-        video_end();    
-        return 0;
-    }
+	
 
     if (firsttime)
     {
-         
-        vidMode = VideoModeAGA;
-        modeId = BestModeID(BIDTAG_NominalWidth, 320,
-                            BIDTAG_NominalHeight, 256,
-                	        BIDTAG_DesiredWidth, 320,
-                	        BIDTAG_DesiredHeight, 256,
-                	        BIDTAG_Depth, 8,
-                	        BIDTAG_MonitorID, PAL_MONITOR_ID,
-                	        TAG_END);
-                                  
         firsttime = 0;
-
-
-
-        _hardwareScreen = OpenScreenTags(NULL,
-                         SA_Depth, 8,
-                         SA_DisplayID, modeId,
-                         SA_Width, 320,
-                         SA_Height,256,
-                         SA_Type, CUSTOMSCREEN,
-                         SA_Overscan, OSCAN_TEXT,
-                         SA_Quiet,TRUE,
-                         SA_ShowTitle, FALSE,
-                         SA_Draggable, FALSE,
-                         SA_Exclusive, TRUE,
-                         SA_AutoScroll, FALSE,
-                         TAG_END);
-
-
-        // Create the hardware screen.
-
-
-        _hardwareScreenBuffer[0] = AllocScreenBuffer(_hardwareScreen, NULL, SB_SCREEN_BITMAP);
-        _hardwareScreenBuffer[1] = AllocScreenBuffer(_hardwareScreen, NULL, 0);
-
-        _currentScreenBuffer = 1;
-
-        _hardwareWindow = OpenWindowTags(NULL,
-                      	    WA_Left, 0,
-                			WA_Top, 0,
-                			WA_Width, 320,
-                			WA_Height, 256,
-                			WA_Title, NULL,
-        					SA_AutoScroll, FALSE,
-                			WA_CustomScreen, (ULONG)_hardwareScreen,
-                			WA_Backdrop, TRUE,
-                			WA_Borderless, TRUE,
-                			WA_DragBar, FALSE,
-                			WA_Activate, TRUE,
-                			WA_SimpleRefresh, TRUE,
-                			WA_NoCareRefresh, TRUE,
-                			WA_ReportMouse, TRUE,
-                			WA_RMBTrap, TRUE,
-                      	    WA_IDCMP,  IDCMP_RAWKEY | IDCMP_MOUSEMOVE | IDCMP_DELTAMOVE | IDCMP_MOUSEBUTTONS,
-                      	    TAG_END);
-
-        SetPointer (_hardwareWindow, emptypointer, 1, 16, 0, 0);
- 
-//        pix = vscreen->data;
-//       if (vscreen)
-//            mmu_chunky = mmu_mark(pix,((vscreen->width * vscreen->height) + 4095) & (~0xFFF),CM_WRITETHROUGH,SysBase);
-//    	mmu_active = 1;         
-  
+        
+        if (isRTG) 
+        {
+            vidMode = VideoModeRTG;
+            start_rtg();            
+        }
+        else
+        {
+            vidMode = VideoModeAGA;
+            start_aga();
+        }
        
     }
 
@@ -249,11 +318,27 @@ void vga_vwait(void) {
 
 int video_copy_screen(s_screen * src) {
 
+    UBYTE *base_address;
     filecache_process();
 
-    c2p1x1_8_c5_bm_040(320,240,0,0,src->data,_hardwareScreenBuffer[_currentScreenBuffer]->sb_BitMap);
-    ChangeScreenBuffer(_hardwareScreen, _hardwareScreenBuffer[_currentScreenBuffer]); 
-    _currentScreenBuffer = _currentScreenBuffer ^ 1;	 
+    if (vidMode == VideoModeAGA)
+    {    
+        c2p1x1_8_c5_bm_040(320,240,0,0,src->data,_hardwareScreenBuffer[_currentScreenBuffer]->sb_BitMap);
+        ChangeScreenBuffer(_hardwareScreen, _hardwareScreenBuffer[_currentScreenBuffer]); 
+        _currentScreenBuffer = _currentScreenBuffer ^ 1;	 
+    }
+    else
+    {
+        video_bitmap_handle = LockBitMapTags (_hardwareScreen->ViewPort.RasInfo->BitMap,
+                                              LBMI_BASEADDRESS, &base_address,
+                                              TAG_DONE);
+        if (video_bitmap_handle) {
+            CopyMem (src->data, base_address, 320 * 240);
+            UnLockBitMap (video_bitmap_handle);
+            video_bitmap_handle = NULL;        
+        } 
+        
+    }
 
 	return 1;
 }

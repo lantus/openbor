@@ -19138,8 +19138,8 @@ void borShutdown(const char *caller, int status, char *msg, ...) {
 #ifdef DEBUG
 	assert(status == 0);	// this way we can haz backtrace.
 #endif
-    borExit(status);
-	exit(status);
+    borExit(0);
+ 
 }
 
 void startup() {

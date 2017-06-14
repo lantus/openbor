@@ -1,14 +1,14 @@
 [Project]
 FileName=OpenBOR.dev
 Name=OpenBOR
-UnitCount=75
+UnitCount=68
 PchHead=-1
 PchSource=-1
 Ver=3
 IsCpp=1
 ProfilesCount=1
 ProfileIndex=0
-Folders=Amiga,SDL,source,source/adpcmlib,source/gamelib,source/gfxlib,source/pnglib,source/preprocessorlib,source/randlib,source/scriptlib
+Folders=Amiga,source,source/adpcmlib,source/gamelib,source/gfxlib,source/pnglib,source/preprocessorlib,source/randlib,source/scriptlib
 
 [VersionInfo]
 Major=0
@@ -625,77 +625,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit60]
-FileName=sdl\control.c
-CompileCpp=0
-Folder=SDL
-Compile=0
-Link=0
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
 [Unit61]
-FileName=sdl\joysticks.c
-CompileCpp=0
-Folder=SDL
-Compile=0
-Link=0
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit62]
-FileName=sdl\menu.c
-CompileCpp=0
-Folder=SDL
-Compile=0
-Link=0
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit63]
-FileName=sdl\sblaster.c
-CompileCpp=0
-Folder=SDL
-Compile=0
-Link=0
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=	$(CC) -c sblaster.c -o obj/sblaster.o $(CFLAGS)
-
-[Unit64]
-FileName=sdl\timer.c
-CompileCpp=0
-Folder=SDL
-Compile=0
-Link=0
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit65]
-FileName=sdl\video.c
-CompileCpp=0
-Folder=SDL
-Compile=0
-Link=0
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit66]
-FileName=data.c
-CompileCpp=0
-Folder=
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=$(CC) -c data.c -o data.o $(CFLAGS)
-
-[Unit67]
 FileName=openbor.c
 CompileCpp=0
 Folder=
@@ -705,7 +635,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=$(CC) -c openbor.c -o openbor.o $(CFLAGS)
 
-[Unit68]
+[Unit62]
 FileName=openborscript.c
 CompileCpp=0
 Folder=
@@ -714,6 +644,56 @@ Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=$(CC) -c openborscript.c -o openborscript.o $(CFLAGS)
+
+[Unit63]
+FileName=amiga\amigaport.c
+CompileCpp=0
+Folder=Amiga
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=$(CC) -c amigaport.c -o obj/amigaport.o $(CFLAGS)
+
+[Unit64]
+FileName=amiga\video.c
+CompileCpp=0
+Folder=Amiga
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=$(CC) -c video.c -o obj/video.o $(CFLAGS)
+
+[Unit66]
+FileName=amiga\control.c
+CompileCpp=0
+Folder=Amiga
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=$(CC) -c control.c -o obj/control.o $(CFLAGS)
+
+[Unit67]
+FileName=amiga\sblaster.c
+CompileCpp=0
+Folder=Amiga
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=$(CC) -c sblaster.c -o obj/sblaster.o $(CFLAGS)
+
+[Unit68]
+FileName=amiga\amiga_timer.c
+CompileCpp=0
+Folder=Amiga
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=$(CC) -c amiga_timer.c -o obj/amiga_timer.o $(CFLAGS)
 
 [Unit69]
 FileName=sdl\sdlport.c
@@ -793,7 +773,7 @@ Compile=1
 Link=1
 Priority=1000
 OverrideBuildCmd=0
-BuildCmd=	$(CC) -c sblaster.c -o obj/sblaster.o $(CFLAGS)
+BuildCmd=$(CC) -c sblaster.c -o obj/sblaster.o $(CFLAGS)
 
 [Unit75]
 FileName=amiga\amiga_timer.c
@@ -804,4 +784,24 @@ Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=$(CC) -c amiga_timer.c -o obj/amiga_timer.o $(CFLAGS)
+
+[Unit60]
+FileName=data.c
+CompileCpp=0
+Folder=
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=$(CC) -c data.c -o data.o $(CFLAGS)
+
+[Unit65]
+FileName=amiga\timer.c
+CompileCpp=0
+Folder=Amiga
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=$(CC) -c timer.c -o obj/timer.o $(CFLAGS)
 
