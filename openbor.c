@@ -19109,8 +19109,8 @@ void borShutdown(const char *caller, int status, char *msg, ...) {
 	PLOG("Release sound system.........");
 	if(startup_done)
 		sound_exit();
-	PLOG("\tDone!\n");
-
+	PLOG("\tDone!\n"); 
+ 
 	PLOG("Release FileCaching System...");
 	if(startup_done)
 		pak_term();
@@ -19137,7 +19137,7 @@ void borShutdown(const char *caller, int status, char *msg, ...) {
 
 #ifdef DEBUG
 	assert(status == 0);	// this way we can haz backtrace.
-#endif
+#endif */
     borExit(0);
  
 }

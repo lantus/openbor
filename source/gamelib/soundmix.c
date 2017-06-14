@@ -1034,6 +1034,9 @@ void sound_pause_music(int toggle) {
 
 void sound_stop_playback() {
 	int i;
+	
+	SB_playstop();
+		
 	if(!mixing_inited)
 		return;
 	if(!mixing_active)
@@ -1041,7 +1044,7 @@ void sound_stop_playback() {
 	sound_close_music();
 	for(i = 0; i < max_channels; i++)
 		sound_stop_sample(i);
-	SB_playstop();
+
 	mixing_active = 0;
 }
 

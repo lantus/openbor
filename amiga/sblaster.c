@@ -80,12 +80,7 @@ int init_sound() {
 
 void exit_sound() {
 
-    if (g_soundThread) {
-        Signal(g_soundThread, SIGBREAKF_CTRL_C);
-    	Delay(10);
-        g_soundThread = NULL;
-    }
-
+    
 	if (ahiReq[1]) {
 		FreeVec(ahiReq[1]);
 		ahiReq[1] = NULL;
@@ -218,7 +213,12 @@ int SB_playstart(int bits, int samplerate) {
 
 void SB_playstop() {
  
-    	 
+    if (g_soundThread) {
+        Signal(g_soundThread, SIGBREAKF_CTRL_C);
+    	Delay(10);
+        g_soundThread = NULL;
+    }
+        	 
 }
  
 void SB_setvolume(char dev, char volume) {

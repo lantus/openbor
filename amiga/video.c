@@ -266,10 +266,8 @@ int video_set_mode(s_videomodes videomodes) {
     
     if(videomodes.hRes==0 && videomodes.vRes == 0)
     {
-        PLOG("\nTerminating Video\n");
-        video_end();
         return 0;
-    }    
+    } 
   
     _hardwareWindow = NULL;
     _hardwareScreenBuffer[0] = NULL;
