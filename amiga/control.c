@@ -212,6 +212,40 @@ unsigned long getPad()
                                     
                 break;
             case JP_TYPE_GAMECTLR:          // CD32 pad
+            
+                if(data&JPF_JOY_UP)
+                    btns |= JPF_JOY_UP;
+
+
+                if(data&JPF_JOY_RIGHT)
+                    btns |= JPF_JOY_RIGHT;
+
+                if(data&JPF_JOY_DOWN)
+                    btns |= JPF_JOY_DOWN;
+
+
+                if(data&JPF_JOY_LEFT)
+                    btns |= JPF_JOY_LEFT;
+
+
+                if(data&JPF_BUTTON_RED)
+                {
+                    btns |= JPF_BUTTON_RED;
+                    PDEBUG("Fire 1 Pressed\n");
+                }
+
+
+                if(data&JPF_BUTTON_BLUE)
+                {
+                    btns |= JPF_BUTTON_BLUE;
+                    PDEBUG("Fire 2 Pressed\n");
+                }
+                
+                if (data&JPF_BUTTON_YELLOW)
+                {
+                    btns |= 0x400;
+                }                
+                            
                 break;
         }
     }
