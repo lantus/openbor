@@ -206,7 +206,7 @@ int SB_playstart(int bits, int samplerate) {
 	
     SetTaskPri(g_soundThread, 2);
 
-    
+    return 1;
     
 }
 

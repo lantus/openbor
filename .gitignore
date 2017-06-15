@@ -19,3 +19,7 @@ OpenBOR.layout
 Makefile.win
 OpenBOR.layout
 Makefile.win
+Release/Saves/BOR.hi
+*.cfg
+OpenBOR.layout
+*.layout
