@@ -16,6 +16,7 @@
 #include <proto/dos.h>
 #include <proto/ahi.h>
 #include <proto/graphics.h>
+#include "amigaport.h"
 #include "sblaster.h"
 #include "soundmix.h"
  
@@ -24,6 +25,7 @@
 
 #define SAMPLES_PER_SEC 44100
 
+#define PLOG(fmt, args...) do {   fprintf(stdout, fmt, ## args); } while (0)
 
 static struct MsgPort *ahiPort = NULL;;
 static struct AHIRequest *ahiReq[2] = { NULL, NULL };
@@ -41,41 +43,52 @@ static struct Task *g_soundThread = NULL;
 // Library bases
 struct Library *AHIBase;
 
+static BYTE audioRunning = 0;
+extern int quit_game;
 
 int init_sound() {
 
 
 
-    ahiPort = (struct MsgPort *)CreateMsgPort();
-    
-
+    ahiPort = (struct MsgPort *)CreateMsgPort();    
     ahiReq[0] = (struct AHIRequest *)CreateIORequest(ahiPort, sizeof(struct AHIRequest));
     
-
     // Open at least version 4.
     ahiReq[0]->ahir_Version = 4;
     
     BYTE deviceError = OpenDevice(AHINAME, AHI_DEFAULT_UNIT, (struct IORequest*)ahiReq[0], 0);
     
+    if (deviceError == 0)
+    {
+        // 32 bits (4 bytes) are required per sample for storage (16bit stereo).
+        _sampleBufferSize = (_sampleCount * 2);
+        
+        soundBuffer[0] = (BYTE *)AllocVec(_sampleBufferSize, MEMF_PUBLIC | MEMF_CLEAR);
+    	soundBuffer[1] = (BYTE *)AllocVec(_sampleBufferSize, MEMF_PUBLIC | MEMF_CLEAR);
+    	 
     
-    // 32 bits (4 bytes) are required per sample for storage (16bit stereo).
-    _sampleBufferSize = (_sampleCount * 2);
+        // Make a copy of the request (for double buffering)
+        ahiReq[1] = (struct AHIRequest *)AllocVec(sizeof(struct AHIRequest), MEMF_PUBLIC);
+        
     
-    soundBuffer[0] = (BYTE *)AllocVec(_sampleBufferSize, MEMF_PUBLIC | MEMF_CLEAR);
-	soundBuffer[1] = (BYTE *)AllocVec(_sampleBufferSize, MEMF_PUBLIC | MEMF_CLEAR);
-	 
-
-    // Make a copy of the request (for double buffering)
-    ahiReq[1] = (struct AHIRequest *)AllocVec(sizeof(struct AHIRequest), MEMF_PUBLIC);
     
-
-
-	CopyMem(ahiReq[0], ahiReq[1], sizeof(struct AHIRequest));
-
-
-	_currentSoundBuffer = 0;
-	ahiReqSent[0] = false;
-	ahiReqSent[1] = false;
+    	CopyMem(ahiReq[0], ahiReq[1], sizeof(struct AHIRequest));
+    
+    
+    	_currentSoundBuffer = 0;
+    	ahiReqSent[0] = false;
+    	ahiReqSent[1] = false;
+    	
+    	audioRunning = 1;
+    }
+    else
+    {
+        PLOG("\nCannot Initialize Audio : Please install AHI V4.X or Higher\n");
+        PLOG("*************************************************************\n\n");
+        quit_game = 1;
+        
+    }
+     
 }
 
 void exit_sound() {
@@ -120,36 +133,39 @@ int sound_thread(STRPTR args, ULONG length) {
 
 
     for (;;) {
-		while (!ahiReqSent[_currentSoundBuffer] || CheckIO((struct IORequest *) ahiReq[_currentSoundBuffer])) {
-
-            if (ahiReqSent[_currentSoundBuffer]) {
-				WaitIO((struct IORequest *) ahiReq[_currentSoundBuffer]);
-            }
-			            
-    		ahiReq[_currentSoundBuffer]->ahir_Std.io_Message.mn_Node.ln_Pri = priority;
-    		ahiReq[_currentSoundBuffer]->ahir_Std.io_Command = CMD_WRITE;
-    		ahiReq[_currentSoundBuffer]->ahir_Std.io_Data    = soundBuffer[_currentSoundBuffer];
-    		ahiReq[_currentSoundBuffer]->ahir_Std.io_Length  = _sampleBufferSize;
-    		ahiReq[_currentSoundBuffer]->ahir_Std.io_Offset  = 0;
-    		ahiReq[_currentSoundBuffer]->ahir_Type		     = AHIST_S16S;
-    		ahiReq[_currentSoundBuffer]->ahir_Frequency		 = _mixingFrequency;
-    		ahiReq[_currentSoundBuffer]->ahir_Position       = 0x8000;
-    		ahiReq[_currentSoundBuffer]->ahir_Volume		 = 0x10000;
-            ahiReq[_currentSoundBuffer]->ahir_Link		     = (ahiReqSent[_currentSoundBuffer^1]) ? ahiReq[_currentSoundBuffer^1] : NULL;
-            
-               
-            update_sample((BYTE *)soundBuffer[_currentSoundBuffer], _sampleBufferSize);              
+        
+        if (audioRunning)
+        {
+    		while (!ahiReqSent[_currentSoundBuffer] || CheckIO((struct IORequest *) ahiReq[_currentSoundBuffer])) {
+    
+                if (ahiReqSent[_currentSoundBuffer]) {
+    				WaitIO((struct IORequest *) ahiReq[_currentSoundBuffer]);
+                }
+    			            
+        		ahiReq[_currentSoundBuffer]->ahir_Std.io_Message.mn_Node.ln_Pri = priority;
+        		ahiReq[_currentSoundBuffer]->ahir_Std.io_Command = CMD_WRITE;
+        		ahiReq[_currentSoundBuffer]->ahir_Std.io_Data    = soundBuffer[_currentSoundBuffer];
+        		ahiReq[_currentSoundBuffer]->ahir_Std.io_Length  = _sampleBufferSize;
+        		ahiReq[_currentSoundBuffer]->ahir_Std.io_Offset  = 0;
+        		ahiReq[_currentSoundBuffer]->ahir_Type		     = AHIST_S16S;
+        		ahiReq[_currentSoundBuffer]->ahir_Frequency		 = _mixingFrequency;
+        		ahiReq[_currentSoundBuffer]->ahir_Position       = 0x8000;
+        		ahiReq[_currentSoundBuffer]->ahir_Volume		 = 0x10000;
+                ahiReq[_currentSoundBuffer]->ahir_Link		     = (ahiReqSent[_currentSoundBuffer^1]) ? ahiReq[_currentSoundBuffer^1] : NULL;
                 
-            SendIO((struct IORequest *)ahiReq[_currentSoundBuffer]);
-    
-    		ahiReqSent[_currentSoundBuffer] = true;  
-    
-            // Flip.
-            _currentSoundBuffer ^= 1;
-            
-        }
+                   
+                update_sample((BYTE *)soundBuffer[_currentSoundBuffer], _sampleBufferSize);              
+                    
+                SendIO((struct IORequest *)ahiReq[_currentSoundBuffer]);
+        
+        		ahiReqSent[_currentSoundBuffer] = true;  
+        
+                // Flip.
+                _currentSoundBuffer ^= 1;
+                
+            }
     		
-    
+        }
 		signals = Wait(SIGBREAKF_CTRL_C | (1 << ahiPort->mp_SigBit));
 		if (signals & SIGBREAKF_CTRL_C) {
 			break;
@@ -168,6 +184,7 @@ int sound_thread(STRPTR args, ULONG length) {
 		WaitIO((struct IORequest *) ahiReq[!_currentSoundBuffer]);
 	}
 
+    audioRunning = 0;
     exit_sound();
 
 	return 0;
