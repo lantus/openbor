@@ -61,9 +61,9 @@ int main(int argc, char *argv[]) {
     else
         cpu_type = 68000;
  
-    if (cpu_type < 68040)
+    if (cpu_type < 68020)
     {
-        PLOG("\nYou need a 68040 or higher to run this engine\n\n");
+        PLOG("\nYou need a 68020 or higher to run this engine\n\n");
         return 0;
     }
 	packfile_mode(0);
