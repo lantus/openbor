@@ -1,17 +1,17 @@
 # Project: OpenBOR
 # Compiler: m68k-Amiga-OS3
 # Compiler Type: MingW 3
-# Makefile created by wxDev-C++ 6.10.2 on 14/06/17 20:30
+# Makefile created by wxDev-C++ 6.10.2 on 26/06/17 15:41
 
 CPP       = m68k-amigaos-g++.exe
 CC        = m68k-amigaos-gcc.exe
 WINDRES   = windres.exe
 OBJ       = obj/adpcm.o obj/2xSaI.o obj/bilinear.o obj/dotmatrix.o obj/gfx.o obj/hq2x.o obj/motionblur.o obj/scale2x.o obj/scanline.o obj/simple2x.o obj/tv2x.o obj/anigif.o obj/bitmap.o obj/commands.o obj/draw.o obj/draw16.o obj/draw32.o obj/filecache.o obj/filters.o obj/font.o obj/loadimg.o obj/menus.o obj/models.o obj/movie.o obj/packfile.o obj/palette.o obj/pixelformat.o obj/screen.o obj/screen16.o obj/screen32.o obj/soundmix.o obj/spritef.o obj/spriteq.o obj/spritex8p16.o obj/spritex8p32.o obj/texture.o obj/texture16.o obj/texture32.o obj/ImportCache.o obj/Instruction.o obj/Interpreter.o obj/Lexer.o obj/List.o obj/Parser.o obj/ParserSet.o obj/ScriptVariant.o obj/SolidList.o obj/Stack.o obj/StackedSymbolTable.o obj/SymbolTable.o obj/pp_lexer.o obj/pp_parser.o obj/rand32.o obj/pngdec.o obj/savepng.o obj/stringptr.o obj/stristr.o obj/utils.o obj/data.o obj/openbor.o obj/openborscript.o obj/amigaport.o obj/video.o obj/timer.o obj/control.o obj/sblaster.o obj/amiga_timer.o
 LINKOBJ   = obj/adpcm.o obj/2xSaI.o obj/bilinear.o obj/dotmatrix.o obj/gfx.o obj/hq2x.o obj/motionblur.o obj/scale2x.o obj/scanline.o obj/simple2x.o obj/tv2x.o obj/anigif.o obj/bitmap.o obj/commands.o obj/draw.o obj/draw16.o obj/draw32.o obj/filecache.o obj/filters.o obj/font.o obj/loadimg.o obj/menus.o obj/models.o obj/movie.o obj/packfile.o obj/palette.o obj/pixelformat.o obj/screen.o obj/screen16.o obj/screen32.o obj/soundmix.o obj/spritef.o obj/spriteq.o obj/spritex8p16.o obj/spritex8p32.o obj/texture.o obj/texture16.o obj/texture32.o obj/ImportCache.o obj/Instruction.o obj/Interpreter.o obj/Lexer.o obj/List.o obj/Parser.o obj/ParserSet.o obj/ScriptVariant.o obj/SolidList.o obj/Stack.o obj/StackedSymbolTable.o obj/SymbolTable.o obj/pp_lexer.o obj/pp_parser.o obj/rand32.o obj/pngdec.o obj/savepng.o obj/stringptr.o obj/stristr.o obj/utils.o obj/data.o obj/openbor.o obj/openborscript.o obj/amigaport.o obj/video.o obj/timer.o obj/control.o obj/sblaster.o obj/amiga_timer.o
-LIBS      = -L"F:/Development/CrossCompiler/AmiDevCpp/usr/local/amiga/m68k-amigaos/lib" -L"F:/Development/CrossCompiler/AmiDevCpp/usr/local/amiga/m68k-amigaos/lib/libb/libnix" -s -noixemul -noixemul -lpng -lz -lm amiga/c2p1x1_8_c5_bm_040.o   -s 
-INCS      = -I"F:/Development/CrossCompiler/AmiDevCpp/usr/local/amiga/m68k-amigaos/sys-include" -I"F:/Development/CrossCompiler/AmiDevCpp/usr/local/amiga/m68k-amigaos/sys-include/SDL" -I"." -I"source" -I"source/adpcmlib" -I"source/gamelib" -I"source/preprocessorlib" -I"source/randlib" -I"source/scriptlib" -I"source/pnglib" -I"source/gfxlib" -I"Amiga"
-CXXINCS   = -I"F:/Development/CrossCompiler/AmiDevCpp/usr/local/amiga/m68k-amigaos/sys-include" -I"F:/Development/CrossCompiler/AmiDevCpp/usr/local/amiga/m68k-amigaos/sys-include/SDL" -I"." -I"source" -I"source/adpcmlib" -I"source/gamelib" -I"source/preprocessorlib" -I"source/randlib" -I"source/scriptlib" -I"source/pnglib" -I"source/gfxlib" -I"Amiga"
-RCINCS    = --include-dir "F:/Development/CrossCompiler/AmiDevCpp/include"
+LIBS      = -L"C:/Development/AmiDevCpp/usr/local/amiga/m68k-amigaos/lib" -L"C:/Development/AmiDevCpp/usr/local/amiga/m68k-amigaos/lib/libb/libnix" -s -noixemul -noixemul -lpng -lz -lm amiga/c2p1x1_8_c5_bm_040.o   -s 
+INCS      = -I"C:/Development/AmiDevCpp/usr/local/amiga/m68k-amigaos/sys-include" -I"." -I"source" -I"source/adpcmlib" -I"source/gamelib" -I"source/preprocessorlib" -I"source/randlib" -I"source/scriptlib" -I"source/pnglib" -I"source/gfxlib" -I"Amiga"
+CXXINCS   = -I"C:/Development/AmiDevCpp/usr/local/amiga/m68k-amigaos/sys-include" -I"C:/Development/AmiDevCpp/usr/local/amiga/m68k-amigaos/sys-include/SDL" -I"." -I"source" -I"source/adpcmlib" -I"source/gamelib" -I"source/preprocessorlib" -I"source/randlib" -I"source/scriptlib" -I"source/pnglib" -I"source/gfxlib" -I"Amiga"
+RCINCS    = --include-dir "C:/DEVELO~1/AMIDEV~1/include"
 BIN       = Release/OpenBOR.exe
 DEFINES   =  -DBOR_BIG_ENDIAN -DAMIGA -DSKIP_CODE -D__M68020__
 CXXFLAGS  = $(CXXINCS) $(DEFINES)   -s -noixemul -fexpensive-optimizations -O2
@@ -224,7 +224,7 @@ obj/timer.o: $(GLOBALDEPS) amiga/timer.c
 obj/control.o: $(GLOBALDEPS) amiga/control.c amiga/video.h amiga/sblaster.h amiga/joysticks.h amiga/control.h amiga/joysticks.h
 	$(CC) -c amiga/control.c -o obj/control.o $(CFLAGS)
 
-obj/sblaster.o: $(GLOBALDEPS) amiga/sblaster.c amiga/sblaster.h
+obj/sblaster.o: $(GLOBALDEPS) amiga/sblaster.c amiga/amigaport.h amiga/sblaster.h
 	$(CC) -c amiga/sblaster.c -o obj/sblaster.o $(CFLAGS)
 
 obj/amiga_timer.o: $(GLOBALDEPS) amiga/amiga_timer.c

@@ -3931,17 +3931,26 @@ int lcmHandleCommandAnim(ArgList * arglist, s_model *newchar, s_anim **newanim, 
 	*value = GET_ARGP(1);
 	
 	char_to_lower(lowercase_buf, *value, sizeof(lowercase_buf));
-	while(l > 0 && lowercase_buf[l - 1] >= '0' && lowercase_buf[l - 1] <= '9') {
-		endsWithNumber = 1;
-		l--;
-	}
-	if(endsWithNumber) {
-		commandIndex = atoi(lowercase_buf + l);
-		lowercase_buf[l] = 0;
-		if(commandIndex < 1)
-			commandIndex = 1;		
-	}
 
+	
+	if (stricmp(lowercase_buf, "jumpattack")  != 0 &&
+        stricmp(lowercase_buf ,"jumpattack2") != 0 &&
+        stricmp(lowercase_buf, "jumpattack3")  != 0)
+	{
+        
+    	while(l > 0 && lowercase_buf[l - 1] >= '0' && lowercase_buf[l - 1] <= '9') {
+    		endsWithNumber = 1;
+    		l--;
+    	}
+            
+    	if(endsWithNumber) {
+    		commandIndex = atoi(lowercase_buf + l);
+    		lowercase_buf[l] = 0;
+    		if(commandIndex < 1)
+    			commandIndex = 1;		
+    	}
+    }
+   
 	// Create new animation
 	(*newanim) = alloc_anim();
 	if(!(*newanim)) {

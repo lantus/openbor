@@ -695,16 +695,6 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=$(CC) -c amiga_timer.c -o obj/amiga_timer.o $(CFLAGS)
 
-[Unit69]
-FileName=sdl\sdlport.c
-CompileCpp=0
-Folder=SDL
-Compile=0
-Link=0
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=$(CC) -c sdlport.c -o sdlport.o $(CFLAGS)
-
 [Unit70]
 FileName=amiga\amigaport.c
 CompileCpp=0
